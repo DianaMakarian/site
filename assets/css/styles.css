@@ -217,6 +217,7 @@ h1 {
   text-shadow: 0 0 10px rgb(255, 255, 255, 0.3);
 }
 
+/* Input and select styles */
 .beginner-section label {
   display: block;
   margin-bottom: 0.5rem;
@@ -239,7 +240,7 @@ h1 {
   font-size: 1.2rem;
   box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.2);
   transition: border-color 0.3s ease;
-  box-sizing: border-box; /* Ensure consistent sizing */
+  box-sizing: border-box;
 }
 
 .beginner-section input[type="text"]:focus,
@@ -273,56 +274,66 @@ h1 {
   --r: 100%;
 }
 
-/* Sliders container */
-.sliders-container {
-  max-height: 400px;
-  overflow-y: auto;
-  margin-bottom: 1.5rem;
+/* Sliders container and groups */
+.parameter-group {
   width: 90%;
   max-width: 700px;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(43, 43, 70, 0.7);
+  border-radius: 8px;
+  border: 1px solid #ffffff1a;
 }
 
-/* Updated slider styles */
+.parameter-group h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgb(255, 255, 255, 0.3);
+}
+
 .slider-div {
   margin: 1.5rem 0;
   display: flex;
-  flex-direction: column; /* Stack label, slider, and value vertically */
-  align-items: center; /* Center all items */
+  flex-direction: column;
+  align-items: flex-start; /* Align labels to the left */
   width: 100%;
 }
 
 .slider-div label {
   font-size: 1rem;
-  margin-bottom: 0.5rem; /* Space between label and slider */
+  margin-bottom: 0.5rem;
   font-weight: 600;
-  text-align: center;
+  text-align: left; /* Labels left-aligned */
 }
 
 .slider-div .slider-wrapper {
   display: flex;
-  align-items: center; /* Align slider and value horizontally */
-  width: 90%;
-  max-width: 700px; /* Match input and select width */
-  gap: 1rem; /* Space between slider and value */
+  align-items: center;
+  width: 100%;
+  max-width: 700px;
+  gap: 1rem;
 }
 
 .slider-div input[type="range"] {
-  width: 100%; /* Take available space in wrapper */
-  max-width: 700px; /* Match input and select */
+  width: 100%;
+  max-width: 700px;
   accent-color: #6b728e;
-  margin: 0; /* Remove default margins */
-  box-sizing: border-box; /* Consistent sizing */
+  margin: 0;
+  box-sizing: border-box;
 }
 
 .slider-div span {
   font-size: 1rem;
   font-weight: 600;
   color: #ffffff;
-  background: #4b5563; /* Match other UI elements */
+  background: #4b5563;
   padding: 0.3rem 0.8rem;
   border-radius: 5px;
   box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.2);
-  min-width: 60px; /* Ensure consistent size for values */
+  min-width: 60px;
   text-align: center;
 }
 
@@ -413,15 +424,18 @@ h1 {
     width: 95%;
     max-width: 100%;
     font-size: 1rem;
-    box-sizing: border-box; /* Ensure consistent sizing on mobile */
+    box-sizing: border-box;
   }
   .predict-btn { 
     padding: 0.6rem 1.2rem;
     font-size: 1rem;
   }
-  .sliders-container { 
+  .parameter-group { 
     width: 95%;
     max-width: 100%;
+  }
+  .parameter-group h3 {
+    font-size: 1.2rem;
   }
   .slider-div { 
     margin: 1rem 0;
@@ -429,11 +443,11 @@ h1 {
   .slider-div .slider-wrapper {
     width: 95%;
     max-width: 100%;
-    gap: 0.5rem; /* Smaller gap on mobile */
+    gap: 0.5rem;
   }
   .slider-div input[type="range"] { 
     width: 100%;
-    max-width: 100%; /* Match input and select on mobile */
+    max-width: 100%;
   }
   .slider-div label {
     font-size: 0.9rem;
@@ -441,7 +455,7 @@ h1 {
   .slider-div span {
     font-size: 0.9rem;
     padding: 0.2rem 0.6rem;
-    min-width: 50px; /* Smaller for mobile */
+    min-width: 50px;
   }
   .parameters-table { 
     width: 95%;

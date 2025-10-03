@@ -89,33 +89,33 @@ window.addEventListener('load', async function() {
     'ra', 'dec', 'koi_kepmag'
   ];
 
-  const beginnerColumns = ['koi_period', 'koi_impact', 'koi_duration', 'koi_depth', 'koi_model_snr', 
-                          'teq_derived', 'prad_srad_ratio', 'koi_steff', 'koi_srad', 'insol'];
+  const beginnerColumns = ['koi_period', 'koi_duration', 'koi_impact', 'koi_depth', 'koi_model_snr', 
+                          'prad_srad_ratio', 'teq_derived', 'insol', 'koi_steff', 'koi_srad'];
 
   const sliderRanges = {
     'koi_period': {min: 0.1, max: 1000, step: 0.001, value: 0.1},
-    'koi_impact': {min: 0, max: 2, step: 0.01, value: 0},
     'koi_duration': {min: 0.1, max: 50, step: 0.01, value: 0.1},
+    'koi_impact': {min: 0, max: 2, step: 0.01, value: 0},
     'koi_depth': {min: 0, max: 100000, step: 1, value: 0},
     'koi_model_snr': {min: 0, max: 1000, step: 1, value: 0},
-    'teq_derived': {min: 0, max: 3000, step: 1, value: 0},
     'prad_srad_ratio': {min: 0, max: 100, step: 0.01, value: 0},
+    'teq_derived': {min: 0, max: 3000, step: 1, value: 0},
+    'insol': {min: 0, max: 1000000, step: 0.01, value: 0},
     'koi_steff': {min: 2000, max: 10000, step: 1, value: 2000},
-    'koi_srad': {min: 0.1, max: 10, step: 0.01, value: 0.1},
-    'insol': {min: 0, max: 1000000, step: 0.01, value: 0}
+    'koi_srad': {min: 0.1, max: 10, step: 0.01, value: 0.1}
   };
 
   const simpleDescriptions = {
     'koi_period': 'Orbital period of the planet (days).',
-    'koi_impact': 'Impact parameter, related to transit trajectory.',
     'koi_duration': 'Duration of the planet’s transit (hours).',
+    'koi_impact': 'Impact parameter, related to transit trajectory.',
     'koi_depth': 'Transit depth, how much the star dims (ppm).',
     'koi_model_snr': 'Signal-to-noise ratio of the transit model.',
-    'teq_derived': 'Equilibrium temperature of the planet (Kelvin).',
     'prad_srad_ratio': 'Planet-to-star radius ratio.',
+    'teq_derived': 'Equilibrium temperature of the planet (Kelvin).',
+    'insol': 'Insolation, stellar flux received by the planet.',
     'koi_steff': 'Stellar effective temperature (Kelvin).',
-    'koi_srad': 'Stellar radius (solar radii).',
-    'insol': 'Insolation, stellar flux received by the planet.'
+    'koi_srad': 'Stellar radius (solar radii).'
   };
 
   // Fetch presets
@@ -210,13 +210,19 @@ window.addEventListener('load', async function() {
           const slidersContainer = document.createElement('div');
           slidersContainer.className = 'sliders-container';
           
-          beginnerColumns.forEach(col => {
+          // Orbital Characteristics group
+          const orbitalGroup = document.createElement('div');
+          orbitalGroup.className = 'parameter-group';
+          const orbitalTitle = document.createElement('h3');
+          orbitalTitle.textContent = 'Orbital Characteristics';
+          const orbitalSliders = document.createElement('div');
+          ['koi_period', 'koi_duration', 'koi_impact'].forEach(col => {
             const sliderDiv = document.createElement('div');
             sliderDiv.className = 'slider-div';
-            
             const label = document.createElement('label');
-            label.textContent = `${col}: `;
-            
+            label.textContent = col;
+            const sliderWrapper = document.createElement('div');
+            sliderWrapper.className = 'slider-wrapper';
             const slider = document.createElement('input');
             slider.type = 'range';
             slider.id = `slider_${col}`;
@@ -225,20 +231,125 @@ window.addEventListener('load', async function() {
             slider.max = range.max;
             slider.step = range.step;
             slider.value = range.value;
-            
             const valueSpan = document.createElement('span');
             valueSpan.textContent = slider.value;
-            
             slider.addEventListener('input', () => {
               valueSpan.textContent = slider.value;
             });
-            
+            sliderWrapper.appendChild(slider);
+            sliderWrapper.appendChild(valueSpan);
             sliderDiv.appendChild(label);
-            sliderDiv.appendChild(slider);
-            sliderDiv.appendChild(valueSpan);
-            slidersContainer.appendChild(sliderDiv);
+            sliderDiv.appendChild(sliderWrapper);
+            orbitalSliders.appendChild(sliderDiv);
           });
-          
+          orbitalGroup.appendChild(orbitalTitle);
+          orbitalGroup.appendChild(orbitalSliders);
+
+          // Transit Characteristics group
+          const transitGroup = document.createElement('div');
+          transitGroup.className = 'parameter-group';
+          const transitTitle = document.createElement('h3');
+          transitTitle.textContent = 'Transit Characteristics';
+          const transitSliders = document.createElement('div');
+          ['koi_depth', 'koi_model_snr', 'prad_srad_ratio'].forEach(col => {
+            const sliderDiv = document.createElement('div');
+            sliderDiv.className = 'slider-div';
+            const label = document.createElement('label');
+            label.textContent = col;
+            const sliderWrapper = document.createElement('div');
+            sliderWrapper.className = 'slider-wrapper';
+            const slider = document.createElement('input');
+            slider.type = 'range';
+            slider.id = `slider_${col}`;
+            const range = sliderRanges[col];
+            slider.min = range.min;
+            slider.max = range.max;
+            slider.step = range.step;
+            slider.value = range.value;
+            const valueSpan = document.createElement('span');
+            valueSpan.textContent = slider.value;
+            slider.addEventListener('input', () => {
+              valueSpan.textContent = slider.value;
+            });
+            sliderWrapper.appendChild(slider);
+            sliderWrapper.appendChild(valueSpan);
+            sliderDiv.appendChild(label);
+            sliderDiv.appendChild(sliderWrapper);
+            transitSliders.appendChild(sliderDiv);
+          });
+          transitGroup.appendChild(transitTitle);
+          transitGroup.appendChild(transitSliders);
+
+          // Planet Environment group
+          const planetGroup = document.createElement('div');
+          planetGroup.className = 'parameter-group';
+          const planetTitle = document.createElement('h3');
+          planetTitle.textContent = 'Planet Environment';
+          const planetSliders = document.createElement('div');
+          ['teq_derived', 'insol'].forEach(col => {
+            const sliderDiv = document.createElement('div');
+            sliderDiv.className = 'slider-div';
+            const label = document.createElement('label');
+            label.textContent = col;
+            const sliderWrapper = document.createElement('div');
+            sliderWrapper.className = 'slider-wrapper';
+            const slider = document.createElement('input');
+            slider.type = 'range';
+            slider.id = `slider_${col}`;
+            const range = sliderRanges[col];
+            slider.min = range.min;
+            slider.max = range.max;
+            slider.step = range.step;
+            slider.value = range.value;
+            const valueSpan = document.createElement('span');
+            valueSpan.textContent = slider.value;
+            slider.addEventListener('input', () => {
+              valueSpan.textContent = slider.value;
+            });
+            sliderWrapper.appendChild(slider);
+            sliderWrapper.appendChild(valueSpan);
+            sliderDiv.appendChild(label);
+            sliderDiv.appendChild(sliderWrapper);
+            planetSliders.appendChild(sliderDiv);
+          });
+          planetGroup.appendChild(planetTitle);
+          planetGroup.appendChild(planetSliders);
+
+          // Stellar Properties group
+          const stellarGroup = document.createElement('div');
+          stellarGroup.className = 'parameter-group';
+          const stellarTitle = document.createElement('h3');
+          stellarTitle.textContent = 'Stellar Properties';
+          const stellarSliders = document.createElement('div');
+          ['koi_steff', 'koi_srad'].forEach(col => {
+            const sliderDiv = document.createElement('div');
+            sliderDiv.className = 'slider-div';
+            const label = document.createElement('label');
+            label.textContent = col;
+            const sliderWrapper = document.createElement('div');
+            sliderWrapper.className = 'slider-wrapper';
+            const slider = document.createElement('input');
+            slider.type = 'range';
+            slider.id = `slider_${col}`;
+            const range = sliderRanges[col];
+            slider.min = range.min;
+            slider.max = range.max;
+            slider.step = range.step;
+            slider.value = range.value;
+            const valueSpan = document.createElement('span');
+            valueSpan.textContent = slider.value;
+            slider.addEventListener('input', () => {
+              valueSpan.textContent = slider.value;
+            });
+            sliderWrapper.appendChild(slider);
+            sliderWrapper.appendChild(valueSpan);
+            sliderDiv.appendChild(label);
+            sliderDiv.appendChild(sliderWrapper);
+            stellarSliders.appendChild(sliderDiv);
+          });
+          stellarGroup.appendChild(stellarTitle);
+          stellarGroup.appendChild(stellarSliders);
+
           // Update sliders based on preset
           presetSelect.addEventListener('change', () => {
             const index = presetSelect.value;
@@ -263,10 +374,8 @@ window.addEventListener('load', async function() {
           // Predict button
           const predictBtn = document.createElement('a');
           predictBtn.href = '#';
-          predictBtn.className = 'btn';
+          predictBtn.className = 'predict-btn';
           predictBtn.textContent = 'Predict';
-          predictBtn.style.display = 'block';
-          predictBtn.style.margin = '2rem auto'; /* Center button */
           
           // Prediction result div
           const predictionResult = document.createElement('div');
@@ -345,7 +454,10 @@ window.addEventListener('load', async function() {
           beginnerSection.appendChild(presetSelect);
           beginnerSection.appendChild(nameLabel);
           beginnerSection.appendChild(nameInput);
-          beginnerSection.appendChild(slidersContainer);
+          beginnerSection.appendChild(orbitalGroup);
+          beginnerSection.appendChild(transitGroup);
+          beginnerSection.appendChild(planetGroup);
+          beginnerSection.appendChild(stellarGroup);
           beginnerSection.appendChild(predictBtn);
           beginnerSection.appendChild(predictionResult);
           beginnerSection.appendChild(paramsTable);
