@@ -62,8 +62,8 @@ h1 {
 /* Button */
 .btn {
   display: inline-block;
-  padding: 1.5rem 4rem;
-  font-size: 1.4rem;
+  padding: 1rem 2rem; /* Smaller padding for smaller button */
+  font-size: 1.2rem; /* Smaller font size */
   font-weight: 600;
   color: #ffffff;
   border: solid 2px #ffffff1a;
@@ -89,7 +89,7 @@ h1 {
 
 /* File input button */
 .btn.file-input {
-  padding: 1.5rem 6rem;
+  padding: 1rem 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,7 +109,7 @@ h1 {
 
 .btn.file-input label {
   cursor: pointer;
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 600;
   color: #ffffff;
   z-index: 1;
@@ -224,6 +224,7 @@ h1 {
 
 .beginner-section input[type="text"] {
   width: 100%;
+  max-width: 400px; /* Match preset-select width */
   padding: 0.8rem;
   margin-bottom: 1.5rem;
   border: 1px solid #ffffff1a;
@@ -231,6 +232,7 @@ h1 {
   background: #2d3748;
   color: #ffffff;
   font-family: 'Fira Code', monospace;
+  font-size: 1rem;
 }
 
 .sliders-container {
@@ -261,6 +263,7 @@ h1 {
 /* Preset selection */
 .preset-select {
   width: 100%;
+  max-width: 400px; /* Set consistent width */
   padding: 0.8rem;
   margin-bottom: 1.5rem;
   border: 1px solid #ffffff1a;
@@ -341,8 +344,8 @@ h1 {
 @media (max-width: 480px) {
   h1 { font-size: 3rem; }
   .subtitle, .level-message { font-size: 1.1rem; }
-  .btn { padding: 1rem 2.5rem; font-size: 1.1rem; }
-  .btn.file-input { padding: 1rem 4rem; }
+  .btn { padding: 0.8rem 1.5rem; font-size: 1rem; }
+  .btn.file-input { padding: 0.8rem 2rem; }
   .file-message { font-size: 1.1rem; }
   .content { margin-top: -8%; }
   .project-info { font-size: 0.8rem; }
@@ -352,4 +355,5 @@ h1 {
   .beginner-section { width: 95%; padding: 1rem; }
   .slider-div input[type="range"] { width: 60%; }
   .parameters-table th, .parameters-table td { padding: 0.5rem; font-size: 0.9rem; }
+  .beginner-section input[type="text"], .preset-select { max-width: 100%; }
 }

@@ -106,16 +106,16 @@ window.addEventListener('load', async function() {
   };
 
   const simpleDescriptions = {
-    'koi_period': 'Период обращения планеты вокруг звезды (в днях).',
-    'koi_impact': 'Параметр воздействия, связанный с траекторией транзита.',
-    'koi_duration': 'Длительность транзита планеты (в часах).',
-    'koi_depth': 'Глубина транзита, насколько звезда затемняется (в ppm).',
-    'koi_model_snr': 'Отношение сигнал/шум модели транзита.',
-    'teq_derived': 'Равновесная температура планеты (в Кельвинах).',
-    'prad_srad_ratio': 'Отношение радиуса планеты к радиусу звезды.',
-    'koi_steff': 'Температура звезды (в Кельвинах).',
-    'koi_srad': 'Радиус звезды (в радиусах Солнца).',
-    'insol': 'Инсоляция, интенсивность излучения звезды на планету.'
+    'koi_period': 'Orbital period of the planet (days).',
+    'koi_impact': 'Impact parameter, related to transit trajectory.',
+    'koi_duration': 'Duration of the planet’s transit (hours).',
+    'koi_depth': 'Transit depth, how much the star dims (ppm).',
+    'koi_model_snr': 'Signal-to-noise ratio of the transit model.',
+    'teq_derived': 'Equilibrium temperature of the planet (Kelvin).',
+    'prad_srad_ratio': 'Planet-to-star radius ratio.',
+    'koi_steff': 'Stellar effective temperature (Kelvin).',
+    'koi_srad': 'Stellar radius (solar radii).',
+    'insol': 'Insolation, stellar flux received by the planet.'
   };
 
   // Fetch presets
@@ -151,7 +151,7 @@ window.addEventListener('load', async function() {
       
       const levelMessage = document.createElement('div');
       levelMessage.className = 'level-message';
-      levelMessage.textContent = 'Новичок в космосе или опытный астроном? Выберите уровень!';
+      levelMessage.textContent = 'New to space or a seasoned astronomer? Choose your level!';
       
       const levelButtons = document.createElement('div');
       levelButtons.className = 'level-buttons';
@@ -159,12 +159,12 @@ window.addEventListener('load', async function() {
       const beginnerBtn = document.createElement('a');
       beginnerBtn.href = '#';
       beginnerBtn.className = 'btn';
-      beginnerBtn.textContent = 'Я новичок';
+      beginnerBtn.textContent = 'I’m a Beginner';
       
       const scientistBtn = document.createElement('a');
       scientistBtn.href = '#';
       scientistBtn.className = 'btn';
-      scientistBtn.textContent = 'Я учёный';
+      scientistBtn.textContent = 'I’m a Scientist';
       
       levelButtons.appendChild(beginnerBtn);
       levelButtons.appendChild(scientistBtn);
@@ -184,27 +184,27 @@ window.addEventListener('load', async function() {
           beginnerSection.className = 'beginner-section';
           
           const title = document.createElement('h2');
-          title.textContent = 'Создай свою экзопланету! Используй ползунки или выбери пресет!';
+          title.textContent = 'Create Your Exoplanet! Use sliders or choose a preset!';
           
           // Preset selection
           const presetLabel = document.createElement('label');
-          presetLabel.textContent = 'Выберите пресет:';
+          presetLabel.textContent = 'Choose a preset:';
           const presetSelect = document.createElement('select');
           presetSelect.className = 'preset-select';
-          presetSelect.innerHTML = '<option value="">Ручной ввод</option>';
+          presetSelect.innerHTML = '<option value="">Manual Input</option>';
           presets.forEach((preset, index) => {
             const option = document.createElement('option');
             option.value = index;
-            option.textContent = preset.kepler_name || `Пресет ${index + 1}`;
+            option.textContent = `${preset.kepoi_name} (${preset.koi_pdisposition})`;
             presetSelect.appendChild(option);
           });
           
           // Planet name input
           const nameLabel = document.createElement('label');
-          nameLabel.textContent = 'Назови планету:';
+          nameLabel.textContent = 'Name your planet:';
           const nameInput = document.createElement('input');
           nameInput.type = 'text';
-          nameInput.placeholder = 'например, MyAwesomePlanet b';
+          nameInput.placeholder = 'e.g., MyAwesomePlanet b';
           
           // Sliders container
           const slidersContainer = document.createElement('div');
@@ -264,9 +264,9 @@ window.addEventListener('load', async function() {
           const predictBtn = document.createElement('a');
           predictBtn.href = '#';
           predictBtn.className = 'btn';
-          predictBtn.textContent = 'Предсказать';
+          predictBtn.textContent = 'Predict';
           predictBtn.style.display = 'block';
-          predictBtn.style.margin = '2rem auto 0';
+          predictBtn.style.margin = '2rem auto'; /* Center button */
           
           // Prediction result div
           const predictionResult = document.createElement('div');
@@ -275,7 +275,7 @@ window.addEventListener('load', async function() {
           
           predictBtn.addEventListener('click', async function(e) {
             e.preventDefault();
-            predictionResult.textContent = 'Предсказание...';
+            predictionResult.textContent = 'Predicting...';
             predictionResult.style.display = 'block';
             
             const row = {};
@@ -307,9 +307,9 @@ window.addEventListener('load', async function() {
               }
               
               const result = await response.json();
-              predictionResult.textContent = `Ваша планета имеет ${(result.prob * 100).toFixed(2)}% вероятность быть кандидатом в экзопланеты.`;
+              predictionResult.textContent = `Your planet has a ${(result.prob * 100).toFixed(2)}% chance of being an exoplanet candidate.`;
             } catch (error) {
-              predictionResult.textContent = 'Ошибка предсказания. Убедитесь, что сервер запущен.';
+              predictionResult.textContent = 'Prediction error. Ensure the backend server is running.';
             }
           });
           
@@ -319,9 +319,9 @@ window.addEventListener('load', async function() {
           const tbody = document.createElement('tbody');
           const headerRow = document.createElement('tr');
           const th1 = document.createElement('th');
-          th1.textContent = 'Параметр';
+          th1.textContent = 'Parameter';
           const th2 = document.createElement('th');
-          th2.textContent = 'Описание';
+          th2.textContent = 'Description';
           headerRow.appendChild(th1);
           headerRow.appendChild(th2);
           thead.appendChild(headerRow);
@@ -331,7 +331,7 @@ window.addEventListener('load', async function() {
             const td1 = document.createElement('td');
             td1.textContent = col;
             const td2 = document.createElement('td');
-            td2.textContent = simpleDescriptions[col] || 'Нет описания.';
+            td2.textContent = simpleDescriptions[col] || 'No description.';
             row.appendChild(td1);
             row.appendChild(td2);
             tbody.appendChild(row);
@@ -366,13 +366,13 @@ window.addEventListener('load', async function() {
           fileBtn.href = '#';
           fileBtn.className = 'btn file-input';
           fileBtn.innerHTML = `
-            <label for="file-upload">Выбрать файл</label>
+            <label for="file-upload">Select File</label>
             <input type="file" id="file-upload" accept=".csv,.txt,.json">
           `;
           
           const fileMessage = document.createElement('div');
           fileMessage.className = 'file-message';
-          fileMessage.textContent = 'Загрузите датасет экзопланет для анализа!';
+          fileMessage.textContent = 'Upload an exoplanet dataset for analysis!';
           
           content.appendChild(fileMessage);
           content.appendChild(fileBtn);
