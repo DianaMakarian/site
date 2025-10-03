@@ -1,36 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>NASA</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exoplanet Detection</title>
   <link rel="stylesheet" href="assets/css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <canvas id="c"></canvas>
-
   <div class="content">
-    <div class="subtitle">Discovering new worlds. Our exoplanet detection project is ready for you.</div>
-    <h1>/DOE4320/</h1>
-    <a href="#" class="btn">Get Started</a>
+    <!-- Get Started Section -->
+    <div id="get-started-section" class="section active">
+      <h1>/DOE4320/</h1>
+      <a href="#" class="btn">Get Started</a>
+    </div>
+    <!-- Choose Your Level Section -->
+    <div id="level-selection-section" class="section">
+      <div class="level-message">New to space or a seasoned astronomer? Choose your level!</div>
+      <div class="level-buttons">
+        <a href="#" class="btn">I’m a Beginner</a>
+        <a href="#" class="btn">I’m a Scientist</a>
+      </div>
+    </div>
+    <!-- Beginner Section -->
+    <div id="beginner-section" class="section">
+      <div class="beginner-section">
+        <h2>Create Your Exoplanet! Use sliders or choose a preset!</h2>
+        <label>Choose a preset:</label>
+        <select class="preset-select">
+          <option value="">Manual Input</option>
+          <!-- Populated dynamically -->
+        </select>
+        <label>Name your planet:</label>
+        <input type="text" placeholder="e.g., MyAwesomePlanet b">
+        <div class="parameter-group">
+          <h3>Orbital Characteristics</h3>
+          <div id="orbital-sliders"></div>
+        </div>
+        <div class="parameter-group">
+          <h3>Transit Characteristics</h3>
+          <div id="transit-sliders"></div>
+        </div>
+        <div class="parameter-group">
+          <h3>Planet Environment</h3>
+          <div id="planet-sliders"></div>
+        </div>
+        <div class="parameter-group">
+          <h3>Stellar Properties</h3>
+          <div id="stellar-sliders"></div>
+        </div>
+        <a href="#" class="predict-btn">Predict</a>
+        <div class="prediction-result" style="display: none;"></div>
+        <table class="parameters-table">
+          <thead>
+            <tr>
+              <th>Parameter</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Populated dynamically -->
+          </tbody>
+        </table>
+        <a href="#" class="btn back-btn">Back</a>
+      </div>
+    </div>
+    <!-- Scientist Section -->
+    <div id="scientist-section" class="section">
+      <div class="file-message">Upload an exoplanet dataset for analysis!</div>
+      <a href="#" class="btn file-input">
+        <label for="file-upload">Select File</label>
+        <input type="file" id="file-upload" accept=".csv,.txt,.json">
+      </a>
+      <a href="#" class="btn back-btn">Back</a>
+    </div>
+    <!-- Exoplanet Info -->
+    <div class="exoplanet-info">
+      <h2>About Exoplanets</h2>
+      <p>Exoplanets, or extrasolar planets, are planets that orbit stars outside our Solar System. Discovered through advanced techniques like the transit method and radial velocity, over 5,000 exoplanets have been confirmed as of 2025, with thousands more candidates awaiting verification.</p>
+      <p>NASA's missions, such as Kepler and TESS, have revolutionized our understanding of these distant worlds. Our project leverages AI and machine learning to analyze NASA datasets, identifying potential exoplanets with unprecedented efficiency.</p>
+      <p>From gas giants to Earth-like rocky planets, exoplanets vary widely in size, composition, and orbit. Some lie in the habitable zone, where conditions might support liquid water, raising exciting possibilities for life beyond Earth.</p>
+    </div>
+    <!-- Project Info (Static, at bottom) -->
+    <div class="project-info">
+      Project complete: Automated exoplanet detection using AI/ML on open NASA datasets. Ready for demonstration.
+    </div>
   </div>
-
-  <div class="project-info">
-    Project complete: Automated exoplanet detection using AI/ML on open NASA datasets. Ready for demonstration.
-  </div>
-
-  <div class="exoplanet-info">
-    <h2>About Exoplanets</h2>
-    <p>Exoplanets, or extrasolar planets, are planets that orbit stars outside our Solar System. Discovered through advanced techniques like the transit method and radial velocity, over 5,000 exoplanets have been confirmed as of 2025, with thousands more candidates awaiting verification.</p>
-    <p>NASA's missions, such as Kepler and TESS, have revolutionized our understanding of these distant worlds. Our project leverages AI and machine learning to analyze NASA datasets, identifying potential exoplanets with unprecedented efficiency.</p>
-    <p>From gas giants to Earth-like rocky planets, exoplanets vary widely in size, composition, and orbit. Some lie in the habitable zone, where conditions might support liquid water, raising exciting possibilities for life beyond Earth.</p>
-  </div>
-
   <script src="assets/js/script.js"></script>
 </body>
 </html>

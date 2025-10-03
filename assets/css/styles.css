@@ -32,19 +32,19 @@ canvas {
   align-items: center;
   text-align: center;
   padding: 2rem;
-  margin-top: -5%; /* Slightly raised for organic look */
 }
 
-.subtitle {
-  font-size: 1.4rem;
-  margin-bottom: 1.2rem;
+/* Section styles */
+.section {
+  display: none;
+  width: 100%;
   opacity: 0;
-  font-weight: 300;
-  letter-spacing: 1px;
-  color: #ffffff;
-  text-shadow: 0 0 15px rgb(255, 255, 255, 0.5);
-  animation: floatInFromTop 1.5s ease-out forwards;
-  animation-delay: 0.2s;
+  transition: opacity 0.5s ease;
+}
+
+.section.active {
+  display: block;
+  opacity: 1;
 }
 
 h1 {
@@ -115,6 +115,11 @@ h1 {
   z-index: 1;
 }
 
+/* Back button */
+.back-btn {
+  margin-top: 2rem;
+}
+
 /* New message above file input or level selection */
 .file-message, .level-message {
   font-size: 1.4rem;
@@ -148,7 +153,10 @@ h1 {
 
 /* Project info */
 .project-info {
-  position: relative;
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 0.9rem;
   color: #ffffff;
   text-align: center;
@@ -157,7 +165,6 @@ h1 {
   background: rgb(15, 15, 30, 0.7);
   border-radius: 10px;
   text-shadow: 0 0 10px rgb(255, 255, 255, 0.3);
-  margin: 2rem auto;
   opacity: 0;
   animation: floatInFromTop 1.5s ease-out forwards;
   animation-delay: 0.8s;
@@ -165,21 +172,23 @@ h1 {
 
 /* Exoplanet info section */
 .exoplanet-info {
+  display: none;
   position: relative;
   z-index: 1;
   padding: 2rem;
   max-width: 800px;
-  margin: 0 auto 2rem;
+  margin: 2rem auto;
   background: rgb(15, 15, 30, 0.7);
   border-radius: 10px;
   text-align: left;
   color: #ffffff;
   opacity: 0;
-  transform: translateY(-50px);
+  transform: translateY(50px);
 }
 
 .exoplanet-info.visible {
-  animation: floatInFromTop 1.5s ease-out forwards;
+  display: block;
+  animation: floatInFromBottom 1.5s ease-out forwards;
 }
 
 .exoplanet-info h2 {
@@ -298,7 +307,7 @@ h1 {
   margin: 1.5rem 0;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align labels to the left */
+  align-items: flex-start;
   width: 100%;
 }
 
@@ -306,7 +315,7 @@ h1 {
   font-size: 1rem;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  text-align: left; /* Labels left-aligned */
+  text-align: left;
 }
 
 .slider-div .slider-wrapper {
@@ -384,6 +393,17 @@ h1 {
   }
 }
 
+@keyframes floatInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes absorbIntoButton {
   from {
     opacity: 1;
@@ -409,11 +429,10 @@ h1 {
 /* Responsiveness */
 @media (max-width: 480px) {
   h1 { font-size: 3rem; }
-  .subtitle, .level-message { font-size: 1.1rem; }
+  .level-message { font-size: 1.1rem; }
   .btn { padding: 0.8rem 1.5rem; font-size: 1rem; }
   .btn.file-input { padding: 0.8rem 2rem; }
   .file-message { font-size: 1.1rem; }
-  .content { margin-top: -8%; }
   .project-info { font-size: 0.8rem; }
   .exoplanet-info h2 { font-size: 1.5rem; }
   .exoplanet-info p { font-size: 0.9rem; }
@@ -469,5 +488,8 @@ h1 {
     width: 95%;
     max-width: 100%;
     font-size: 0.9rem;
+  }
+  .back-btn {
+    margin-top: 1.5rem;
   }
 }

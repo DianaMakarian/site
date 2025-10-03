@@ -35,7 +35,7 @@ window.addEventListener('load', async function() {
     context.fillStyle = 'rgb(255, 255, 255)';
   };
   
-  document.addEventListener('resize', resize);
+  window.addEventListener('resize', resize);
   resize();
   
   mouseX = centerX;
@@ -70,7 +70,8 @@ window.addEventListener('load', async function() {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
-        observer.unobserve(entry.target);
+      } else {
+        entry.target.classList.remove('visible');
       }
     });
   }, { threshold: 0.1 });
@@ -131,366 +132,253 @@ window.addEventListener('load', async function() {
     console.error('Error fetching presets:', error);
   }
 
-  const btn = document.querySelector('.btn');
-  const content = document.querySelector('.content');
-  btn.addEventListener('click', function(e) {
+  // Section management
+  const sections = {
+    getStarted: document.getElementById('get-started-section'),
+    levelSelection: document.getElementById('level-selection-section'),
+    beginner: document.getElementById('beginner-section'),
+    scientist: document.getElementById('scientist-section')
+  };
+
+  function resetAnimations(sectionId) {
+    const section = sections[sectionId];
+    const animatableElements = section.querySelectorAll('h1, .btn, .level-message, .level-buttons');
+    animatableElements.forEach(el => {
+      el.classList.remove('absorb', 'slide-out');
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(-50px)';
+      el.style.animation = 'none';
+      // Force reflow to reset animation
+      el.offsetHeight;
+      el.style.animation = '';
+      // Re-apply floatInFromTop animation
+      el.style.animation = 'floatInFromTop 1.5s ease-out forwards';
+      // Adjust animation-delay based on element type
+      if (el.tagName === 'H1') {
+        el.style.animationDelay = '0.4s';
+      } else if (el.classList.contains('btn')) {
+        el.style.animationDelay = '0.6s';
+      } else if (el.classList.contains('level-message')) {
+        el.style.animationDelay = '0.2s';
+      } else if (el.classList.contains('level-buttons')) {
+        el.style.animationDelay = '0.4s';
+      }
+    });
+  }
+
+  function showSection(sectionId, pushState = true) {
+    Object.values(sections).forEach(section => {
+      section.classList.remove('active');
+      section.style.display = 'none';
+    });
+    sections[sectionId].style.display = 'block';
+    setTimeout(() => {
+      sections[sectionId].classList.add('active');
+      resetAnimations(sectionId);
+    }, 10);
+    if (pushState) {
+      history.pushState({ section: sectionId }, '', `#${sectionId}`);
+    }
+  }
+
+  // Handle browser back/forward
+  window.addEventListener('popstate', function(event) {
+    const sectionId = event.state?.section || 'getStarted';
+    Object.values(sections).forEach(section => {
+      section.classList.remove('active');
+      section.style.display = 'none';
+    });
+    sections[sectionId].style.display = 'block';
+    setTimeout(() => {
+      sections[sectionId].classList.add('active');
+      resetAnimations(sectionId);
+    }, 10);
+  });
+
+  // Initialize: Show Get Started section
+  showSection('getStarted', false);
+
+  // Get Started button
+  const getStartedBtn = document.querySelector('#get-started-section .btn');
+  getStartedBtn.addEventListener('click', function(e) {
     e.preventDefault();
-    
-    const subtitle = document.querySelector('.subtitle');
     const h1 = document.querySelector('h1');
-    const exoplanetInfo = document.querySelector('.exoplanet-info');
-    subtitle.classList.add('absorb');
+    getStartedBtn.classList.add('slide-out');
     h1.classList.add('absorb');
-    btn.classList.add('slide-out');
-    exoplanetInfo.style.display = 'none';
     
     setTimeout(() => {
-      subtitle.style.display = 'none';
-      h1.style.display = 'none';
-      btn.style.display = 'none';
-      
-      const levelMessage = document.createElement('div');
-      levelMessage.className = 'level-message';
-      levelMessage.textContent = 'New to space or a seasoned astronomer? Choose your level!';
-      
-      const levelButtons = document.createElement('div');
-      levelButtons.className = 'level-buttons';
-      
-      const beginnerBtn = document.createElement('a');
-      beginnerBtn.href = '#';
-      beginnerBtn.className = 'btn';
-      beginnerBtn.textContent = 'I’m a Beginner';
-      
-      const scientistBtn = document.createElement('a');
-      scientistBtn.href = '#';
-      scientistBtn.className = 'btn';
-      scientistBtn.textContent = 'I’m a Scientist';
-      
-      levelButtons.appendChild(beginnerBtn);
-      levelButtons.appendChild(scientistBtn);
-      
-      content.appendChild(levelMessage);
-      content.appendChild(levelButtons);
-      
-      beginnerBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        levelMessage.classList.add('absorb');
-        levelButtons.classList.add('slide-out');
-        setTimeout(() => {
-          levelMessage.style.display = 'none';
-          levelButtons.style.display = 'none';
-          
-          const beginnerSection = document.createElement('div');
-          beginnerSection.className = 'beginner-section';
-          
-          const title = document.createElement('h2');
-          title.textContent = 'Create Your Exoplanet! Use sliders or choose a preset!';
-          
-          // Preset selection
-          const presetLabel = document.createElement('label');
-          presetLabel.textContent = 'Choose a preset:';
-          const presetSelect = document.createElement('select');
-          presetSelect.className = 'preset-select';
-          presetSelect.innerHTML = '<option value="">Manual Input</option>';
-          presets.forEach((preset, index) => {
-            const option = document.createElement('option');
-            option.value = index;
-            option.textContent = `${preset.kepoi_name} (${preset.koi_pdisposition})`;
-            presetSelect.appendChild(option);
-          });
-          
-          // Planet name input
-          const nameLabel = document.createElement('label');
-          nameLabel.textContent = 'Name your planet:';
-          const nameInput = document.createElement('input');
-          nameInput.type = 'text';
-          nameInput.placeholder = 'e.g., MyAwesomePlanet b';
-          
-          // Sliders container
-          const slidersContainer = document.createElement('div');
-          slidersContainer.className = 'sliders-container';
-          
-          // Orbital Characteristics group
-          const orbitalGroup = document.createElement('div');
-          orbitalGroup.className = 'parameter-group';
-          const orbitalTitle = document.createElement('h3');
-          orbitalTitle.textContent = 'Orbital Characteristics';
-          const orbitalSliders = document.createElement('div');
-          ['koi_period', 'koi_duration', 'koi_impact'].forEach(col => {
-            const sliderDiv = document.createElement('div');
-            sliderDiv.className = 'slider-div';
-            const label = document.createElement('label');
-            label.textContent = col;
-            const sliderWrapper = document.createElement('div');
-            sliderWrapper.className = 'slider-wrapper';
-            const slider = document.createElement('input');
-            slider.type = 'range';
-            slider.id = `slider_${col}`;
-            const range = sliderRanges[col];
-            slider.min = range.min;
-            slider.max = range.max;
-            slider.step = range.step;
-            slider.value = range.value;
-            const valueSpan = document.createElement('span');
-            valueSpan.textContent = slider.value;
-            slider.addEventListener('input', () => {
-              valueSpan.textContent = slider.value;
-            });
-            sliderWrapper.appendChild(slider);
-            sliderWrapper.appendChild(valueSpan);
-            sliderDiv.appendChild(label);
-            sliderDiv.appendChild(sliderWrapper);
-            orbitalSliders.appendChild(sliderDiv);
-          });
-          orbitalGroup.appendChild(orbitalTitle);
-          orbitalGroup.appendChild(orbitalSliders);
-
-          // Transit Characteristics group
-          const transitGroup = document.createElement('div');
-          transitGroup.className = 'parameter-group';
-          const transitTitle = document.createElement('h3');
-          transitTitle.textContent = 'Transit Characteristics';
-          const transitSliders = document.createElement('div');
-          ['koi_depth', 'koi_model_snr', 'prad_srad_ratio'].forEach(col => {
-            const sliderDiv = document.createElement('div');
-            sliderDiv.className = 'slider-div';
-            const label = document.createElement('label');
-            label.textContent = col;
-            const sliderWrapper = document.createElement('div');
-            sliderWrapper.className = 'slider-wrapper';
-            const slider = document.createElement('input');
-            slider.type = 'range';
-            slider.id = `slider_${col}`;
-            const range = sliderRanges[col];
-            slider.min = range.min;
-            slider.max = range.max;
-            slider.step = range.step;
-            slider.value = range.value;
-            const valueSpan = document.createElement('span');
-            valueSpan.textContent = slider.value;
-            slider.addEventListener('input', () => {
-              valueSpan.textContent = slider.value;
-            });
-            sliderWrapper.appendChild(slider);
-            sliderWrapper.appendChild(valueSpan);
-            sliderDiv.appendChild(label);
-            sliderDiv.appendChild(sliderWrapper);
-            transitSliders.appendChild(sliderDiv);
-          });
-          transitGroup.appendChild(transitTitle);
-          transitGroup.appendChild(transitSliders);
-
-          // Planet Environment group
-          const planetGroup = document.createElement('div');
-          planetGroup.className = 'parameter-group';
-          const planetTitle = document.createElement('h3');
-          planetTitle.textContent = 'Planet Environment';
-          const planetSliders = document.createElement('div');
-          ['teq_derived', 'insol'].forEach(col => {
-            const sliderDiv = document.createElement('div');
-            sliderDiv.className = 'slider-div';
-            const label = document.createElement('label');
-            label.textContent = col;
-            const sliderWrapper = document.createElement('div');
-            sliderWrapper.className = 'slider-wrapper';
-            const slider = document.createElement('input');
-            slider.type = 'range';
-            slider.id = `slider_${col}`;
-            const range = sliderRanges[col];
-            slider.min = range.min;
-            slider.max = range.max;
-            slider.step = range.step;
-            slider.value = range.value;
-            const valueSpan = document.createElement('span');
-            valueSpan.textContent = slider.value;
-            slider.addEventListener('input', () => {
-              valueSpan.textContent = slider.value;
-            });
-            sliderWrapper.appendChild(slider);
-            sliderWrapper.appendChild(valueSpan);
-            sliderDiv.appendChild(label);
-            sliderDiv.appendChild(sliderWrapper);
-            planetSliders.appendChild(sliderDiv);
-          });
-          planetGroup.appendChild(planetTitle);
-          planetGroup.appendChild(planetSliders);
-
-          // Stellar Properties group
-          const stellarGroup = document.createElement('div');
-          stellarGroup.className = 'parameter-group';
-          const stellarTitle = document.createElement('h3');
-          stellarTitle.textContent = 'Stellar Properties';
-          const stellarSliders = document.createElement('div');
-          ['koi_steff', 'koi_srad'].forEach(col => {
-            const sliderDiv = document.createElement('div');
-            sliderDiv.className = 'slider-div';
-            const label = document.createElement('label');
-            label.textContent = col;
-            const sliderWrapper = document.createElement('div');
-            sliderWrapper.className = 'slider-wrapper';
-            const slider = document.createElement('input');
-            slider.type = 'range';
-            slider.id = `slider_${col}`;
-            const range = sliderRanges[col];
-            slider.min = range.min;
-            slider.max = range.max;
-            slider.step = range.step;
-            slider.value = range.value;
-            const valueSpan = document.createElement('span');
-            valueSpan.textContent = slider.value;
-            slider.addEventListener('input', () => {
-              valueSpan.textContent = slider.value;
-            });
-            sliderWrapper.appendChild(slider);
-            sliderWrapper.appendChild(valueSpan);
-            sliderDiv.appendChild(label);
-            sliderDiv.appendChild(sliderWrapper);
-            stellarSliders.appendChild(sliderDiv);
-          });
-          stellarGroup.appendChild(stellarTitle);
-          stellarGroup.appendChild(stellarSliders);
-
-          // Update sliders based on preset
-          presetSelect.addEventListener('change', () => {
-            const index = presetSelect.value;
-            if (index !== '') {
-              const preset = presets[index];
-              nameInput.value = preset.kepler_name || '';
-              beginnerColumns.forEach(col => {
-                const slider = document.getElementById(`slider_${col}`);
-                slider.value = preset[col] || sliderRanges[col].value;
-                slider.nextElementSibling.textContent = slider.value;
-              });
-            } else {
-              nameInput.value = '';
-              beginnerColumns.forEach(col => {
-                const slider = document.getElementById(`slider_${col}`);
-                slider.value = sliderRanges[col].value;
-                slider.nextElementSibling.textContent = slider.value;
-              });
-            }
-          });
-          
-          // Predict button
-          const predictBtn = document.createElement('a');
-          predictBtn.href = '#';
-          predictBtn.className = 'predict-btn';
-          predictBtn.textContent = 'Predict';
-          
-          // Prediction result div
-          const predictionResult = document.createElement('div');
-          predictionResult.className = 'prediction-result';
-          predictionResult.style.display = 'none';
-          
-          predictBtn.addEventListener('click', async function(e) {
-            e.preventDefault();
-            predictionResult.textContent = 'Predicting...';
-            predictionResult.style.display = 'block';
-            
-            const row = {};
-            allColumns.forEach(col => {
-              if (beginnerColumns.includes(col)) {
-                row[col] = parseFloat(document.getElementById(`slider_${col}`).value);
-              } else if (col === 'kepler_name') {
-                row[col] = nameInput.value || '';
-              } else if (col === 'koi_disposition' || col === 'koi_pdisposition') {
-                row[col] = 'CANDIDATE';
-              } else if (['kepoi_name', 'kepler_name', 'koi_tce_delivname'].includes(col)) {
-                row[col] = '';
-              } else if (col === 'koi_tce_delivname') {
-                row[col] = 'q1_q17_dr25_tce';
-              } else {
-                row[col] = 0;
-              }
-            });
-            
-            try {
-              const response = await fetch('http://127.0.0.1:5000/predict', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(row)
-              });
-              
-              if (!response.ok) {
-                throw new Error('Prediction failed');
-              }
-              
-              const result = await response.json();
-              predictionResult.textContent = `Your planet has a ${(result.prob * 100).toFixed(2)}% chance of being an exoplanet candidate.`;
-            } catch (error) {
-              predictionResult.textContent = 'Prediction error. Ensure the backend server is running.';
-            }
-          });
-          
-          const paramsTable = document.createElement('table');
-          paramsTable.className = 'parameters-table';
-          const thead = document.createElement('thead');
-          const tbody = document.createElement('tbody');
-          const headerRow = document.createElement('tr');
-          const th1 = document.createElement('th');
-          th1.textContent = 'Parameter';
-          const th2 = document.createElement('th');
-          th2.textContent = 'Description';
-          headerRow.appendChild(th1);
-          headerRow.appendChild(th2);
-          thead.appendChild(headerRow);
-
-          beginnerColumns.forEach(col => {
-            const row = document.createElement('tr');
-            const td1 = document.createElement('td');
-            td1.textContent = col;
-            const td2 = document.createElement('td');
-            td2.textContent = simpleDescriptions[col] || 'No description.';
-            row.appendChild(td1);
-            row.appendChild(td2);
-            tbody.appendChild(row);
-          });
-
-          paramsTable.appendChild(thead);
-          paramsTable.appendChild(tbody);
-
-          beginnerSection.appendChild(title);
-          beginnerSection.appendChild(presetLabel);
-          beginnerSection.appendChild(presetSelect);
-          beginnerSection.appendChild(nameLabel);
-          beginnerSection.appendChild(nameInput);
-          beginnerSection.appendChild(orbitalGroup);
-          beginnerSection.appendChild(transitGroup);
-          beginnerSection.appendChild(planetGroup);
-          beginnerSection.appendChild(stellarGroup);
-          beginnerSection.appendChild(predictBtn);
-          beginnerSection.appendChild(predictionResult);
-          beginnerSection.appendChild(paramsTable);
-          
-          content.appendChild(beginnerSection);
-        }, 1200);
-      });
-      
-      scientistBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        levelMessage.classList.add('absorb');
-        levelButtons.classList.add('slide-out');
-        setTimeout(() => {
-          levelMessage.style.display = 'none';
-          levelButtons.style.display = 'none';
-          
-          const fileBtn = document.createElement('a');
-          fileBtn.href = '#';
-          fileBtn.className = 'btn file-input';
-          fileBtn.innerHTML = `
-            <label for="file-upload">Select File</label>
-            <input type="file" id="file-upload" accept=".csv,.txt,.json">
-          `;
-          
-          const fileMessage = document.createElement('div');
-          fileMessage.className = 'file-message';
-          fileMessage.textContent = 'Upload an exoplanet dataset for analysis!';
-          
-          content.appendChild(fileMessage);
-          content.appendChild(fileBtn);
-        }, 1200);
-      });
+      showSection('levelSelection');
     }, 1200);
+  });
+
+  // Level selection buttons
+  const beginnerBtn = document.querySelector('#level-selection-section .btn:nth-child(1)');
+  const scientistBtn = document.querySelector('#level-selection-section .btn:nth-child(2)');
+
+  beginnerBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const levelMessage = document.querySelector('.level-message');
+    const levelButtons = document.querySelector('.level-buttons');
+    levelMessage.classList.add('absorb');
+    levelButtons.classList.add('slide-out');
+    
+    setTimeout(() => {
+      // Populate Beginner section
+      const presetSelect = document.querySelector('.preset-select');
+      presetSelect.innerHTML = '<option value="">Manual Input</option>';
+      presets.forEach((preset, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = preset.kepler_name || `Preset ${index + 1}`;
+        presetSelect.appendChild(option);
+      });
+
+      // Populate sliders
+      const sliderContainers = {
+        'koi_period': document.getElementById('orbital-sliders'),
+        'koi_duration': document.getElementById('orbital-sliders'),
+        'koi_impact': document.getElementById('orbital-sliders'),
+        'koi_depth': document.getElementById('transit-sliders'),
+        'koi_model_snr': document.getElementById('transit-sliders'),
+        'prad_srad_ratio': document.getElementById('transit-sliders'),
+        'teq_derived': document.getElementById('planet-sliders'),
+        'insol': document.getElementById('planet-sliders'),
+        'koi_steff': document.getElementById('stellar-sliders'),
+        'koi_srad': document.getElementById('stellar-sliders')
+      };
+
+      beginnerColumns.forEach(col => {
+        const sliderDiv = document.createElement('div');
+        sliderDiv.className = 'slider-div';
+        const label = document.createElement('label');
+        label.textContent = col;
+        const sliderWrapper = document.createElement('div');
+        sliderWrapper.className = 'slider-wrapper';
+        const slider = document.createElement('input');
+        slider.type = 'range';
+        slider.id = `slider_${col}`;
+        const range = sliderRanges[col];
+        slider.min = range.min;
+        slider.max = range.max;
+        slider.step = range.step;
+        slider.value = range.value;
+        const valueSpan = document.createElement('span');
+        valueSpan.textContent = slider.value;
+        slider.addEventListener('input', () => {
+          valueSpan.textContent = slider.value;
+        });
+        sliderWrapper.appendChild(slider);
+        sliderWrapper.appendChild(valueSpan);
+        sliderDiv.appendChild(label);
+        sliderDiv.appendChild(sliderWrapper);
+        sliderContainers[col].appendChild(sliderDiv);
+      });
+
+      // Populate parameters table
+      const tbody = document.querySelector('.parameters-table tbody');
+      tbody.innerHTML = '';
+      beginnerColumns.forEach(col => {
+        const row = document.createElement('tr');
+        const td1 = document.createElement('td');
+        td1.textContent = col;
+        const td2 = document.createElement('td');
+        td2.textContent = simpleDescriptions[col] || 'No description.';
+        row.appendChild(td1);
+        row.appendChild(td2);
+        tbody.appendChild(row);
+      });
+
+      // Preset selection handler
+      const nameInput = document.querySelector('.beginner-section input[type="text"]');
+      presetSelect.addEventListener('change', () => {
+        const index = presetSelect.value;
+        if (index !== '') {
+          const preset = presets[index];
+          nameInput.value = preset.kepler_name || '';
+          beginnerColumns.forEach(col => {
+            const slider = document.getElementById(`slider_${col}`);
+            slider.value = preset[col] || sliderRanges[col].value;
+            slider.nextElementSibling.textContent = slider.value;
+          });
+        } else {
+          nameInput.value = '';
+          beginnerColumns.forEach(col => {
+            const slider = document.getElementById(`slider_${col}`);
+            slider.value = sliderRanges[col].value;
+            slider.nextElementSibling.textContent = slider.value;
+          });
+        }
+      });
+
+      // Predict button handler
+      const predictBtn = document.querySelector('.predict-btn');
+      const predictionResult = document.querySelector('.prediction-result');
+      predictBtn.addEventListener('click', async function(e) {
+        e.preventDefault();
+        predictionResult.textContent = 'Predicting...';
+        predictionResult.style.display = 'block';
+        
+        const row = {};
+        allColumns.forEach(col => {
+          if (beginnerColumns.includes(col)) {
+            row[col] = parseFloat(document.getElementById(`slider_${col}`).value);
+          } else if (col === 'kepler_name') {
+            row[col] = nameInput.value || '';
+          } else if (col === 'koi_disposition' || col === 'koi_pdisposition') {
+            row[col] = 'CANDIDATE';
+          } else if (['kepoi_name', 'kepler_name', 'koi_tce_delivname'].includes(col)) {
+            row[col] = '';
+          } else if (col === 'koi_tce_delivname') {
+            row[col] = 'q1_q17_dr25_tce';
+          } else {
+            row[col] = 0;
+          }
+        });
+        
+        try {
+          const response = await fetch('http://127.0.0.1:5000/predict', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(row)
+          });
+          
+          if (!response.ok) {
+            throw new Error('Prediction failed');
+          }
+          
+          const result = await response.json();
+          predictionResult.textContent = `Your planet has a ${(result.prob * 100).toFixed(2)}% chance of being an exoplanet candidate.`;
+        } catch (error) {
+          predictionResult.textContent = 'Prediction error. Ensure the backend server is running.';
+        }
+      });
+
+      showSection('beginner');
+    }, 1200);
+  });
+
+  scientistBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const levelMessage = document.querySelector('.level-message');
+    const levelButtons = document.querySelector('.level-buttons');
+    levelMessage.classList.add('absorb');
+    levelButtons.classList.add('slide-out');
+    
+    setTimeout(() => {
+      showSection('scientist');
+    }, 1200);
+  });
+
+  // Back button handlers
+  document.querySelectorAll('.back-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      const currentSection = btn.closest('.section');
+      currentSection.classList.add('slide-out');
+      setTimeout(() => {
+        showSection('levelSelection');
+      }, 1200);
+    });
   });
 }, false);
 
