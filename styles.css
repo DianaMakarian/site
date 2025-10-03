@@ -1,0 +1,355 @@
+/* Define custom property for radial gradient radius */
+@property --r {
+  syntax: '<length-percentage>';
+  initial-value: 0px;
+  inherits: false;
+}
+
+/* General styles */
+html, body {
+  margin: 0;
+  font-family: 'Fira Code', monospace;
+  color: #ffffff;
+}
+
+/* Canvas for cosmic background */
+canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* Central content */
+.content {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  margin-top: -5%; /* Slightly raised for organic look */
+}
+
+.subtitle {
+  font-size: 1.4rem;
+  margin-bottom: 1.2rem;
+  opacity: 0;
+  font-weight: 300;
+  letter-spacing: 1px;
+  color: #ffffff;
+  text-shadow: 0 0 15px rgb(255, 255, 255, 0.5);
+  animation: floatInFromTop 1.5s ease-out forwards;
+  animation-delay: 0.2s;
+}
+
+h1 {
+  font-size: 5rem;
+  margin: 0 0 1.5rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgb(255, 255, 255, 0.3);
+  opacity: 0;
+  animation: floatInFromTop 1.5s ease-out forwards;
+  animation-delay: 0.4s;
+}
+
+/* Button */
+.btn {
+  display: inline-block;
+  padding: 1.5rem 4rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffffff;
+  border: solid 2px #ffffff1a;
+  border-radius: 50px;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: inset 1px 3px 1px #ffffff66;
+  background: 
+    radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
+      #6b728e calc(var(--r) - 1px), #4b5563 var(--r)) 
+    border-box;
+  font-family: 'Fira Code', monospace;
+  transition: --r 0.35s ease;
+  position: relative;
+  opacity: 0;
+  animation: floatInFromTop 1.5s ease-out forwards;
+  animation-delay: 0.6s;
+}
+
+.btn:hover {
+  --r: 100%;
+}
+
+/* File input button */
+.btn.file-input {
+  padding: 1.5rem 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  animation: floatInFromTop 1.5s ease-out forwards;
+  opacity: 0;
+  background: 
+    radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
+      #6b728e calc(var(--r) - 1px), #4b5563 var(--r)) 
+    border-box;
+  box-shadow: inset 1px 3px 1px #ffffff66;
+}
+
+.btn.file-input input[type="file"] {
+  display: none;
+}
+
+.btn.file-input label {
+  cursor: pointer;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffffff;
+  z-index: 1;
+}
+
+/* New message above file input or level selection */
+.file-message, .level-message {
+  font-size: 1.4rem;
+  font-weight: 300;
+  letter-spacing: 1px;
+  color: #ffffff;
+  text-shadow: 0 0 15px rgb(255, 255, 255, 0.5);
+  margin-bottom: 1.2rem;
+  opacity: 0;
+  animation: floatInFromTop 1.5s ease-out forwards;
+  animation-delay: 0.2s;
+}
+
+/* Level selection buttons container */
+.level-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Absorb animation for text */
+.absorb {
+  animation: absorbIntoButton 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+/* Slide out animation for button */
+.slide-out {
+  animation: slideOutDown 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+}
+
+/* Project info */
+.project-info {
+  position: relative;
+  font-size: 0.9rem;
+  color: #ffffff;
+  text-align: center;
+  max-width: 600px;
+  padding: 0.5rem 1rem;
+  background: rgb(15, 15, 30, 0.7);
+  border-radius: 10px;
+  text-shadow: 0 0 10px rgb(255, 255, 255, 0.3);
+  margin: 2rem auto;
+  opacity: 0;
+  animation: floatInFromTop 1.5s ease-out forwards;
+  animation-delay: 0.8s;
+}
+
+/* Exoplanet info section */
+.exoplanet-info {
+  position: relative;
+  z-index: 1;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  background: rgb(15, 15, 30, 0.7);
+  border-radius: 10px;
+  text-align: left;
+  color: #ffffff;
+  opacity: 0;
+  transform: translateY(-50px);
+}
+
+.exoplanet-info.visible {
+  animation: floatInFromTop 1.5s ease-out forwards;
+}
+
+.exoplanet-info h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgb(255, 255, 255, 0.3);
+}
+
+.exoplanet-info p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
+/* Beginner section styles */
+.beginner-section {
+  width: 80%;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgb(15, 15, 30, 0.7);
+  border-radius: 10px;
+  text-align: left;
+}
+
+.beginner-section h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgb(255, 255, 255, 0.3);
+  text-align: center;
+}
+
+.beginner-section label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 400;
+  color: #ffffff;
+}
+
+.beginner-section input[type="text"] {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ffffff1a;
+  border-radius: 5px;
+  background: #2d3748;
+  color: #ffffff;
+  font-family: 'Fira Code', monospace;
+}
+
+.sliders-container {
+  max-height: 400px;
+  overflow-y: auto;
+  margin-bottom: 1.5rem;
+}
+
+.slider-div {
+  margin: 1rem 0;
+}
+
+.slider-div label {
+  font-size: 1rem;
+  margin-right: 1rem;
+}
+
+.slider-div input[type="range"] {
+  width: 70%;
+  accent-color: #6b728e;
+}
+
+.slider-div span {
+  margin-left: 1rem;
+  font-weight: 600;
+}
+
+/* Preset selection */
+.preset-select {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #ffffff1a;
+  border-radius: 5px;
+  background: #2d3748;
+  color: #ffffff;
+  font-family: 'Fira Code', monospace;
+  font-size: 1rem;
+}
+
+/* Parameters table styles */
+.parameters-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+}
+
+.parameters-table th, .parameters-table td {
+  border: 1px solid #ffffff1a;
+  padding: 0.8rem;
+  text-align: left;
+}
+
+.parameters-table th {
+  background: #4b5563;
+  font-weight: 600;
+}
+
+.parameters-table td {
+  background: #2d3748;
+}
+
+/* Prediction result */
+.prediction-result {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: #4b5563;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes floatInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes absorbIntoButton {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(50px) scale(0.5);
+  }
+}
+
+@keyframes slideOutDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(200px);
+  }
+}
+
+/* Responsiveness */
+@media (max-width: 480px) {
+  h1 { font-size: 3rem; }
+  .subtitle, .level-message { font-size: 1.1rem; }
+  .btn { padding: 1rem 2.5rem; font-size: 1.1rem; }
+  .btn.file-input { padding: 1rem 4rem; }
+  .file-message { font-size: 1.1rem; }
+  .content { margin-top: -8%; }
+  .project-info { font-size: 0.8rem; }
+  .exoplanet-info h2 { font-size: 1.5rem; }
+  .exoplanet-info p { font-size: 0.9rem; }
+  .level-buttons { flex-direction: column; gap: 1rem; }
+  .beginner-section { width: 95%; padding: 1rem; }
+  .slider-div input[type="range"] { width: 60%; }
+  .parameters-table th, .parameters-table td { padding: 0.5rem; font-size: 0.9rem; }
+}
