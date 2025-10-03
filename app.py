@@ -54,7 +54,7 @@ class CNN_M3(nn.Module):
         return x
 
 # Load dataset for presets
-df = pd.read_csv('KOI.csv', sep=',', skiprows=53)
+df = pd.read_csv('data/KOI.csv', sep=',', skiprows=53)
 mask = df["koi_pdisposition"].isin(["CANDIDATE", "FALSE POSITIVE"])
 data = df[mask].copy()
 
@@ -105,7 +105,7 @@ scaler.fit(data_phys[features].values)
 # Load model
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = CNN_M3().to(device)
-model.load_state_dict(torch.load('best_model.pth', map_location=device))
+model.load_state_dict(torch.load('models/best_model.pth', map_location=device))
 model.eval()
 
 @app.route('/presets', methods=['GET'])
