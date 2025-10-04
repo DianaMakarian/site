@@ -108,7 +108,7 @@ window.addEventListener('load', async function () {
   function resetAnimations(sectionId) {
     const section = sections[sectionId];
     if (!section) return;
-    const animatable = section.querySelectorAll('h1, .btn, .level-message, .level-buttons, .exoplanet-info, .intro-text');
+    const animatable = section.querySelectorAll('h1, h2, .btn, .level-message, .level-buttons, .exoplanet-info, .intro-text, .section-block');
     animatable.forEach(el => {
       el.classList.remove('absorb', 'slide-out');
       el.style.opacity = '0';
@@ -223,7 +223,6 @@ window.addEventListener('load', async function () {
   const nameInput = document.querySelector('.beginner-section input[type="text"]');
   const predictBtn = document.querySelector('.predict-btn');
   const predictionResult = document.querySelector('.prediction-result');
-  const tbody = document.querySelector('.parameters-table tbody');
   const sliderContainers = {
     'koi_period':      document.getElementById('orbital-sliders'),
     'koi_duration':    document.getElementById('orbital-sliders'),
@@ -243,27 +242,26 @@ window.addEventListener('load', async function () {
     beginnerColumns.forEach(col => {
       const wrap = document.createElement('div');
       wrap.className = 'slider-div';
-      const label = document.createElement('label'); label.textContent = col;
-      const sliderWrapper = document.createElement('div'); sliderWrapper.className = 'slider-wrapper';
+      const label = document.createElement('label'); 
+      label.textContent = simpleDescriptions[col];
+      const sliderWrapper = document.createElement('div'); 
+      sliderWrapper.className = 'slider-wrapper';
       const slider = document.createElement('input');
-      slider.type = 'range'; slider.id = `slider_${col}`;
+      slider.type = 'range'; 
+      slider.id = `slider_${col}`;
       const r = sliderRanges[col];
-      slider.min = r.min; slider.max = r.max; slider.step = r.step; slider.value = initial?.[col] ?? r.value;
-      const valueSpan = document.createElement('span'); valueSpan.textContent = slider.value;
+      slider.min = r.min; 
+      slider.max = r.max; 
+      slider.step = r.step; 
+      slider.value = initial?.[col] ?? r.value;
+      const valueSpan = document.createElement('span'); 
+      valueSpan.textContent = slider.value;
       slider.addEventListener('input', () => valueSpan.textContent = slider.value);
-      sliderWrapper.appendChild(slider); sliderWrapper.appendChild(valueSpan);
-      wrap.appendChild(label); wrap.appendChild(sliderWrapper);
+      sliderWrapper.appendChild(slider); 
+      sliderWrapper.appendChild(valueSpan);
+      wrap.appendChild(label); 
+      wrap.appendChild(sliderWrapper);
       sliderContainers[col].appendChild(wrap);
-    });
-  }
-  function fillTable() {
-    tbody.innerHTML = '';
-    beginnerColumns.forEach(col => {
-      const tr = document.createElement('tr');
-      const td1 = document.createElement('td'); td1.textContent = col;
-      const td2 = document.createElement('td'); td2.textContent = simpleDescriptions[col] || '—';
-      tr.appendChild(td1); tr.appendChild(td2);
-      tbody.appendChild(tr);
     });
   }
 
@@ -279,54 +277,125 @@ window.addEventListener('load', async function () {
     presetSelect.innerHTML = '<option value="">Manual Input</option>';
     presets.forEach((p,i) => {
       const opt = document.createElement('option');
-      opt.value = i; opt.textContent = p.kepler_name || `Preset ${i+1}`;
+      opt.value = i; 
+      opt.textContent = p.kepler_name || `Preset ${i+1}`;
       presetSelect.appendChild(opt);
     });
-    buildSliders(); fillTable();
-
+    buildSliders();
     presetSelect.onchange = () => {
       const idx = presetSelect.value;
-      if (idx === '') { nameInput.value = ''; buildSliders(); }
-      else {
+      if (idx === '') { 
+        nameInput.value = ''; 
+        buildSliders(); 
+      } else {
         const preset = presets[idx];
         nameInput.value = preset.kepler_name || '';
         buildSliders(preset);
       }
-      fillTable();
     };
     showSection('beginner');
   });
 
   predictBtn.addEventListener('click', async (e) => {
     e.preventDefault();
-    predictionResult.style.display = 'block'; predictionResult.textContent = 'Predicting...';
-    const row = {}; beginnerColumns.forEach(col => row[col] = parseFloat(document.getElementById(`slider_${col}`).value));
+    predictionResult.style.display = 'block'; 
+    predictionResult.textContent = 'Predicting...';
+    const row = {}; 
+    beginnerColumns.forEach(col => row[col] = parseFloat(document.getElementById(`slider_${col}`).value));
     try {
       const resp = await fetch('http://127.0.0.1:5000/predict', {
-        method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(row)
+        method:'POST', 
+        headers:{'Content-Type':'application/json'}, 
+        body: JSON.stringify(row)
       });
       if (!resp.ok) throw new Error();
       const data = await resp.json();
       predictionResult.textContent = `Your planet has a ${(data.prob*100).toFixed(2)}% chance of being an exoplanet candidate.`;
-    } catch { predictionResult.textContent = 'Prediction failed.'; }
+    } catch { 
+      predictionResult.textContent = 'Prediction failed.'; 
+    }
   });
 
   /* ========= SCIENTIST ========= */
-  scientistBtn.addEventListener('click', (e) => { e.preventDefault(); showSection('scientist'); });
+  scientistBtn.addEventListener('click', (e) => { 
+    e.preventDefault(); 
+    showSection('scientist'); 
+  });
   const scientistForm = document.getElementById('scientist-form');
   const scientistResult = document.getElementById('scientist-result');
   if (scientistForm) {
     scientistForm.addEventListener('submit', async (e) => {
-      e.preventDefault(); scientistResult.textContent = 'Predicting...';
-      const formData = new FormData(scientistForm); const payload={}; formData.forEach((v,k)=>payload[k]=parseFloat(v));
+      e.preventDefault(); 
+      scientistResult.textContent = 'Predicting...';
+      const formData = new FormData(scientistForm); 
+      const payload={}; 
+      formData.forEach((v,k)=>payload[k]=parseFloat(v));
       try {
         const resp = await fetch('http://127.0.0.1:5000/predict_scientist', {
-          method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)
+          method:'POST', 
+          headers:{'Content-Type':'application/json'}, 
+          body: JSON.stringify(payload)
         });
         if (!resp.ok) throw new Error();
         const data = await resp.json();
         scientistResult.textContent = `Prediction: ${data.prediction}`;
-      } catch { scientistResult.textContent = 'Prediction failed.'; }
+      } catch { 
+        scientistResult.textContent = 'Prediction failed.'; 
+      }
     });
   }
+
+  /* ========= MODAL FOR VIDEO VISUALIZATION ========= */
+  const showVisualizationBtn = document.querySelector('.show-visualization');
+  const videoModal = document.querySelector('#videoModal');
+  const closeModal = document.querySelector('.close-modal');
+
+  if (showVisualizationBtn && videoModal && closeModal) {
+    showVisualizationBtn.addEventListener('click', () => {
+      videoModal.style.display = 'flex';
+    });
+
+    closeModal.addEventListener('click', () => {
+      videoModal.style.display = 'none';
+      const video = videoModal.querySelector('.transit-video');
+      if (video) {
+        video.pause(); // Pause video when closing modal
+        video.currentTime = 0; // Reset to start
+      }
+    });
+
+    // Close modal when clicking outside the modal content
+    videoModal.addEventListener('click', (e) => {
+      if (e.target === videoModal) {
+        videoModal.style.display = 'none';
+        const video = videoModal.querySelector('.transit-video');
+        if (video) {
+          video.pause(); // Pause video when closing modal
+          video.currentTime = 0; // Reset to start
+        }
+      }
+    });
+  }
+
+  /* ========= SCROLL OBSERVER FOR SECTION BLOCKS ========= */
+  const sectionBlocks = document.querySelectorAll('.section-block');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        const video = entry.target.querySelector('.section-video');
+        if (video) {
+          video.style.opacity = 1;
+        }
+      } else {
+        entry.target.classList.remove('visible');
+        const video = entry.target.querySelector('.section-video');
+        if (video) {
+          video.style.opacity = 0;
+        }
+      }
+    });
+  }, { threshold: 0.5 }); // Trigger when 50% of block is visible
+
+  sectionBlocks.forEach(block => observer.observe(block));
 });

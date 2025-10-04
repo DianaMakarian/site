@@ -20,26 +20,45 @@
     <canvas id="c"></canvas>
 
     <section id="get-started-section" class="section content">
-      <h1>/DOE4320/</h1>
-      <p class="project-info">Project complete: Automated exoplanet detection using AI/ML on open NASA datasets. Ready for demonstration</p>
-      <div class="intro-text">
+      <div class="header-container">
+        <h1>/DOE4320/</h1>
         <h2>🚀 Project Overview: Exoplanet Hunter</h2>
-        <h3>The Mission: Finding Worlds in the Data</h3>
-        <p>Our project is a machine learning solution designed to accelerate the discovery of exoplanets—worlds outside our solar system. We built a neural network that uses real astronomical data to solve a critical challenge in astrophysics: distinguishing genuine planet signals from the overwhelming cosmic "noise."</p>
-        <h3>The Simple Idea: The Transit Method</h3>
-        <p>When a planet passes (or "transits") in front of its host star from our perspective, the star's brightness dips slightly. This is the transit method, the most effective way to find new planets. However, not every dip in brightness is a planet. Signals are often obscured by:</p>
-        <ul>
-          <li>False positives: Distant binary stars or eclipsing star systems.</li>
-          <li>Instrument errors: Noise from the telescope.</li>
-          <li>Statistical variation: Random fluctuations in light.</li>
-        </ul>
-        <p>Our model automates this process, sifting through millions of data points to find subtle patterns in numerical features that are nearly impossible for the human eye to spot.</p>
-        <h3>What You Can Do</h3>
-        <p><strong>For Beginners:</strong> Explore a real-world application of machine learning using genuine NASA Kepler data. Understand the basics of the transit method by running data through the model.</p>
-        <p><strong>For Researchers:</strong> Use the model as an initial filter to quickly identify the most promising exoplanet candidates, saving valuable time and telescope resources for follow-up observations.</p>
-        <p>Ready to start hunting? Click the button below!</p>
       </div>
-      <a href="#" class="btn">Get Started</a>
+      <div class="section-block" id="mission-block">
+        <video autoplay loop muted class="section-video">
+          <source src="media/exoplanet.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="section-text">
+          <h3>The Mission: Finding Worlds in the Data</h3>
+          <p>Our project is a machine learning solution designed to accelerate the discovery of exoplanets—worlds outside our solar system. We built a neural network that uses real astronomical data to solve a critical challenge in astrophysics: distinguishing genuine planet signals from the overwhelming cosmic "noise."</p>
+        </div>
+      </div>
+      <div class="section-block reverse" id="transit-block">
+        <video autoplay loop muted class="section-video">
+          <source src="media/transit_method.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="section-text">
+          <h3>The Simple Idea: The Transit Method</h3>
+          <p>When a planet passes (or "transits") in front of its host star from our perspective, the star's brightness dips slightly. This is the transit method, the most effective way to find new planets. However, not every dip in brightness is a planet. Signals are often obscured by:</p>
+          <ul>
+            <li>False positives: Distant binary stars or eclipsing star systems.</li>
+            <li>Instrument errors: Noise from the telescope.</li>
+            <li>Statistical variation: Random fluctuations in light.</li>
+          </ul>
+          <p>Our model automates this process, sifting through millions of data points to find subtle patterns in numerical features that are nearly impossible for the human eye to spot.</p>
+        </div>
+      </div>
+      <div class="section-block centered" id="what-you-can-do-block">
+        <div class="section-text centered-text">
+          <h3>What You Can Do</h3>
+          <p><strong>For Beginners:</strong> Explore a real-world application of machine learning using genuine NASA Kepler data. Understand the basics of the transit method by running data through the model.</p>
+          <p><strong>For Researchers:</strong> Use the model as an initial filter to quickly identify the most promising exoplanet candidates, saving valuable time and telescope resources for follow-up observations.</p>
+          <p>Ready to start hunting? Click the button below!</p>
+        </div>
+        <a href="#" class="btn">Get Started</a>
+      </div>
     </section>
 
     <section id="level-selection-section" class="section content">
@@ -95,12 +114,6 @@
       </div>
       <a href="#" class="predict-btn">Predict</a>
       <div class="prediction-result"></div>
-      <table class="parameters-table">
-        <thead>
-          <tr><th>Parameter</th><th>Description</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
     </section>
 
     <section id="scientist-section" class="section content">
@@ -158,6 +171,16 @@
           <li><strong>Analysis:</strong> The exact shape of this light "dip" (called a light curve) can reveal key properties: the planet's orbital period, its size, its distance from the star, and even its approximate temperature.</li>
         </ul>
         <p>Crucially, the transit method doesn't "see" planets directly; it captures their shadows. This means it only detects planets whose orbits are perfectly aligned with our line of sight, but even with this limitation, it revolutionized the field, turning exoplanets from a rarity into a statistical certainty.</p>
+        <button class="btn show-visualization">Show Visualization</button>
+        <div class="modal" id="videoModal">
+          <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <video controls loop autoplay class="transit-video">
+              <source src="media/transit2.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
         <h3>🧭 Future Development</h3>
         <p>Our project's vector for future development includes two main paths:</p>
         <p><strong>Educational Enrichment:</strong></p>
@@ -171,6 +194,12 @@
           <li><strong>Confidence Scoring:</strong> Developing a more nuanced output that provides a confidence score for candidates, rather than just a binary classification, to better guide researchers in prioritizing follow-up observations.</li>
         </ul>
         <p>Our tool is designed to be an assistive technology, not a replacement for human astronomers. It helps them filter the immense haystack of data to rapidly pinpoint the few "pearls"—objects that truly merit closer inspection and could lead to the next famous astronomical discovery.</p>
+        <h3>Additional Resources</h3>
+        <ul>
+          <li><a href="https://science.nasa.gov/exoplanets/" target="_blank">NASA Exoplanets</a>: Explore NASA's comprehensive resource on exoplanets, including discovery methods, recent findings, and mission details.</li>
+          <li><a href="https://science.nasa.gov/exoplanet-catalog/koi-159901/" target="_blank">KOI-1599.01 Catalog</a>: Learn about a specific Kepler Object of Interest (KOI-1599.01), including its characteristics and status as an exoplanet candidate.</li>
+          <li><a href="https://science.nasa.gov/mission/roman-space-telescope/transit-method/" target="_blank">Roman Space Telescope: Transit Method</a>: Understand how the Nancy Grace Roman Space Telescope uses the transit method to detect exoplanets.</li>
+        </ul>
       </div>
     </section>
   </main>
