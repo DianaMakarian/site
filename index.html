@@ -65,8 +65,8 @@
       <h1>New to space or a seasoned astronomer? Choose your level!</h1>
       <p class="level-message">Pick your experience level to begin exploring!</p>
       <div class="level-buttons">
-        <a href="#" class="btn">I’m a Beginner</a>
-        <a href="#" class="btn">I’m a Scientist</a>
+        <a href="#" class="btn">I'm a Beginner</a>
+        <a href="#" class="btn">I'm a Scientist</a>
       </div>
       <div class="level-info-container">
         <div class="level-info">
@@ -94,7 +94,6 @@
 
     <section id="beginner-section" class="section beginner-section">
       <div class="beginner-container">
-        <!-- Left side: Controls -->
         <div class="beginner-controls">
           <h2>Create Your Exoplanet!</h2>
           
@@ -119,7 +118,6 @@
           </div>
         </div>
 
-        <!-- Right side: Planet visualization -->
         <div class="planet-visualization">
           <div class="planet-container">
             <svg class="planet-svg" width="320" height="320" viewBox="0 0 320 320">
@@ -154,12 +152,12 @@
         </div>
       </div>
 
-      <!-- Info section -->
       <div class="model-info">
         <h3>About This Model</h3>
         <p>This calculator uses a Convolutional Neural Network (CNN) trained on NASA's Kepler Objects of Interest (KOI) dataset. The model analyzes 10 key parameters including orbital characteristics, transit properties, and stellar features to predict the probability that a celestial object is an exoplanet candidate. Predictions update in real-time as you adjust the parameters.</p>
       </div>
     </section>
+
     <section id="scientist-section" class="section content">
       <h2>Manual Input for Scientists</h2>
       <p>Enter parameters for your candidate planet:</p>
@@ -187,63 +185,71 @@
       <div id="scientist-result"></div>
     </section>
 
-    <section id="exoplanet-info" class="exoplanet-info">
-      <h2>About Exoplanets</h2>
-      <p>Exoplanets, or extrasolar planets, are planets that orbit stars outside our Solar System...</p>
-    </section>
-
     <section id="learnMore" class="section content">
-      <h2>🔭 Learn More: The Science and the Solution</h2>
-      <div class="exoplanet-info">
-        <h3>The Data: The Kepler Objects of Interest (KOI)</h3>
-        <p>Our model is trained on the Kepler Objects of Interest (KOI) Catalog, an immense list of "suspicious" objects compiled by the Kepler Space Telescope. For years, Kepler continuously monitored thousands of stars, recording the slightest variations in their brightness. Each time the light dimmed, an entry was added to the database: a potential planet transit.</p>
-        <p>However, in this cosmic lottery, not every dimming event signifies an exoplanet. The data is categorized with labels essential for our training:</p>
-        <ul>
-          <li><strong>Confirmed Exoplanet:</strong> A verified world.</li>
-          <li><strong>Candidate:</strong> An object with transit-like features, requiring further study.</li>
-          <li><strong>False Positive:</strong> An event caused by something other than an exoplanet (e.g., a background star).</li>
-        </ul>
-        <p>Each object holds a rich set of characteristics—the duration and depth of the dimming, the star's temperature, its radius—real physical parameters used by astronomers.</p>
-        <p>We specifically focused on training our neural network to distinguish between Candidates and False Positives. By learning from these examples, the model is trained to recognize where a planet is truly hiding in the data versus where it's merely an optical illusion.</p>
-        <h3>The Transit Method Explained</h3>
-        <p>The transit method is perhaps the most elegant way to find planets beyond our system. It's based on a remarkably simple principle: If a planet crosses directly in front of its star (from an observer's perspective on Earth), the star's measured brightness drops slightly.</p>
-        <p>Imagine: You're looking at a lightbulb, and a tiny speck of dust briefly passes in front of it. The light doesn't vanish, but it becomes marginally dimmer. Kepler did the same thing, but instead of dust specks, it was looking for Earth- or Jupiter-sized planets orbiting stars hundreds of light-years away.</p>
-        <p><strong>How It Works:</strong></p>
-        <ul>
-          <li><strong>Measurement:</strong> The telescope continuously measures the light intensity (brightness) of thousands of stars.</li>
-          <li><strong>Detection:</strong> If the brightness periodically drops for the same duration and with the same depth, it's a strong indication of an orbiting planet.</li>
-          <li><strong>Analysis:</strong> The exact shape of this light "dip" (called a light curve) can reveal key properties: the planet's orbital period, its size, its distance from the star, and even its approximate temperature.</li>
-        </ul>
-        <p>Crucially, the transit method doesn't "see" planets directly; it captures their shadows. This means it only detects planets whose orbits are perfectly aligned with our line of sight, but even with this limitation, it revolutionized the field, turning exoplanets from a rarity into a statistical certainty.</p>
-        <button class="btn show-visualization">Show Visualization</button>
-        <div class="modal" id="videoModal">
-          <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <video controls loop autoplay class="transit-video">
-              <source src="media/transit2.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-          </div>
+      <div class="header-container learn-more-header">
+        <h2>🔭 Learn More: The Science and the Solution</h2>
+      </div>
+
+      <div class="section-block" id="data-block">
+        <img src="https://science.nasa.gov/wp-content/uploads/2023/09/kepler-22b-artists-concept.jpg" alt="Kepler Data" class="section-image">
+        <div class="section-text">
+          <h3>The Data: Kepler Objects of Interest (KOI)</h3>
+          <p>Our model is trained on the Kepler Objects of Interest (KOI) Catalog, an immense list of "suspicious" objects compiled by the Kepler Space Telescope. For years, Kepler continuously monitored thousands of stars, recording the slightest variations in their brightness. Each time the light dimmed, an entry was added to the database: a potential planet transit.</p>
+          <p>However, in this cosmic lottery, not every dimming event signifies an exoplanet. The data is categorized with labels essential for our training:</p>
+          <ul>
+            <li><strong>Confirmed Exoplanet:</strong> A verified world.</li>
+            <li><strong>Candidate:</strong> An object with transit-like features, requiring further study.</li>
+            <li><strong>False Positive:</strong> An event caused by something other than an exoplanet.</li>
+          </ul>
+          <p>We specifically focused on training our neural network to distinguish between Candidates and False Positives, learning where a planet is truly hiding versus where it's merely an optical illusion.</p>
         </div>
-        <h3>🧭 Future Development</h3>
-        <p>Our project's vector for future development includes two main paths:</p>
-        <p><strong>Educational Enrichment:</strong></p>
-        <ul>
-          <li><strong>Enhanced Visualization:</strong> Integrating more intuitive and interactive diagrams of the transit method, the light curve, and how the model interprets features.</li>
-          <li><strong>Guided Learning:</strong> Creating a step-by-step tutorial section to help new users connect the raw numerical inputs to the astrophysical phenomena they represent.</li>
-        </ul>
-        <p><strong>Research Utility:</strong></p>
-        <ul>
-          <li><strong>New Data Integration:</strong> Expanding the model to ingest data from newer missions, such as TESS (Transiting Exoplanet Survey Satellite), to broaden its predictive scope.</li>
-          <li><strong>Confidence Scoring:</strong> Developing a more nuanced output that provides a confidence score for candidates, rather than just a binary classification, to better guide researchers in prioritizing follow-up observations.</li>
-        </ul>
-        <p>Our tool is designed to be an assistive technology, not a replacement for human astronomers. It helps them filter the immense haystack of data to rapidly pinpoint the few "pearls"—objects that truly merit closer inspection and could lead to the next famous astronomical discovery.</p>
-        <h3>Additional Resources</h3>
-        <ul>
-          <li><a href="https://science.nasa.gov/exoplanets/" target="_blank">NASA Exoplanets</a>: Explore NASA's comprehensive resource on exoplanets, including discovery methods, recent findings, and mission details.</li>
-          <li><a href="https://science.nasa.gov/exoplanet-catalog/koi-159901/" target="_blank">KOI-1599.01 Catalog</a>: Learn about a specific Kepler Object of Interest (KOI-1599.01), including its characteristics and status as an exoplanet candidate.</li>
-          <li><a href="https://science.nasa.gov/mission/roman-space-telescope/transit-method/" target="_blank">Roman Space Telescope: Transit Method</a>: Understand how the Nancy Grace Roman Space Telescope uses the transit method to detect exoplanets.</li>
-        </ul>
+      </div>
+
+      <div class="section-block reverse" id="transit-method-block">
+        <video autoplay loop muted class="section-video">
+          <source src="media/transit2.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="section-text">
+          <h3>The Transit Method Explained</h3>
+          <p>The transit method is perhaps the most elegant way to find planets beyond our system. It's based on a remarkably simple principle: If a planet crosses directly in front of its star from an observer's perspective on Earth, the star's measured brightness drops slightly.</p>
+          <p>Imagine you're looking at a lightbulb, and a tiny speck of dust briefly passes in front of it. The light doesn't vanish, but it becomes marginally dimmer. Kepler did the same thing, but instead of dust specks, it was looking for Earth- or Jupiter-sized planets orbiting stars hundreds of light-years away.</p>
+          <p><strong>How It Works:</strong></p>
+          <ul>
+            <li><strong>Measurement:</strong> The telescope continuously measures the light intensity of thousands of stars.</li>
+            <li><strong>Detection:</strong> If brightness periodically drops for the same duration and depth, it indicates an orbiting planet.</li>
+            <li><strong>Analysis:</strong> The shape of the light "dip" reveals key properties: orbital period, size, distance, and temperature.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-block" id="future-block">
+        <img src="https://science.nasa.gov/wp-content/uploads/2023/04/tess-spacecraft-artists-concept.jpg" alt="Future Development" class="section-image">
+        <div class="section-text">
+          <h3>🧭 Future Development</h3>
+          <p><strong>Educational Enrichment:</strong></p>
+          <ul>
+            <li><strong>Enhanced Visualization:</strong> Integrating more intuitive and interactive diagrams of the transit method, the light curve, and how the model interprets features.</li>
+            <li><strong>Guided Learning:</strong> Creating a step-by-step tutorial section to help new users connect the raw numerical inputs to the astrophysical phenomena they represent.</li>
+          </ul>
+          <p><strong>Research Utility:</strong></p>
+          <ul>
+            <li><strong>New Data Integration:</strong> Expanding the model to ingest data from newer missions, such as TESS (Transiting Exoplanet Survey Satellite), to broaden its predictive scope.</li>
+            <li><strong>Confidence Scoring:</strong> Developing a more nuanced output that provides a confidence score for candidates, rather than just a binary classification.</li>
+          </ul>
+          <p>Our tool is designed to be an assistive technology, not a replacement for human astronomers. It helps them filter the immense haystack of data to rapidly pinpoint the few "pearls"—objects that truly merit closer inspection.</p>
+        </div>
+      </div>
+
+      <div class="section-block centered resources-block">
+        <div class="section-text centered-text">
+          <h3>Additional Resources</h3>
+          <ul class="resources-list">
+            <li><a href="https://science.nasa.gov/exoplanets/" target="_blank">NASA Exoplanets</a>: Explore NASA's comprehensive resource on exoplanets, including discovery methods, recent findings, and mission details.</li>
+            <li><a href="https://science.nasa.gov/exoplanet-catalog/koi-159901/" target="_blank">KOI-1599.01 Catalog</a>: Learn about a specific Kepler Object of Interest, including its characteristics and status as an exoplanet candidate.</li>
+            <li><a href="https://science.nasa.gov/mission/roman-space-telescope/transit-method/" target="_blank">Roman Space Telescope: Transit Method</a>: Understand how the Nancy Grace Roman Space Telescope uses the transit method to detect exoplanets.</li>
+          </ul>
+        </div>
       </div>
     </section>
   </main>

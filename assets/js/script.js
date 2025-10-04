@@ -73,10 +73,8 @@ function Particle(x, y, z) {
    Main logic
    ========================= */
 window.addEventListener('load', async function () {
-  // Scroll to top on page load/refresh
   window.scrollTo(0, 0);
   
-  // canvas setup
   canvas = document.getElementById('c');
   function resize() {
     canvasWidth = canvas.width = window.innerWidth;
@@ -99,7 +97,6 @@ window.addEventListener('load', async function () {
   document.addEventListener('mouseup', () => targetSpeed = DEFAULT_SPEED);
   setInterval(loop, 1000 / 120);
 
-  // sections
   const sections = {
     getStarted: document.getElementById('get-started-section'),
     levelSelection: document.getElementById('level-selection-section'),
@@ -111,37 +108,22 @@ window.addEventListener('load', async function () {
   function resetAnimations(sectionId) {
     const section = sections[sectionId];
     if (!section) return;
-    const animatable = section.querySelectorAll('h1, h2, .btn, .level-message, .level-buttons, .exoplanet-info, .intro-text, .section-block');
+    const animatable = section.querySelectorAll('h1, h2, .btn, .level-message, .level-buttons, .intro-text, .section-block');
     animatable.forEach(el => {
       el.classList.remove('absorb', 'slide-out');
       el.style.opacity = '0';
       el.style.transform = 'translateY(-50px)';
       el.style.animation = 'none';
-      el.offsetHeight; // reflow
+      el.offsetHeight;
       el.style.animation = '';
       el.style.animation = 'floatInFromTop 0.8s ease-out forwards';
     });
-    // Special handling for exoplanet-info in learnMore section
-    if (sectionId === 'learnMore') {
-      const exoplanetInfo = section.querySelector('.exoplanet-info');
-      if (exoplanetInfo) {
-        exoplanetInfo.style.display = 'block';
-        exoplanetInfo.classList.add('visible');
-      }
-    }
   }
 
   function hideAll() { 
     Object.values(sections).forEach(sec => { 
       sec.classList.remove('active'); 
       sec.style.display = 'none'; 
-      if (sec.id === 'learnMore') {
-        const exoplanetInfo = sec.querySelector('.exoplanet-info');
-        if (exoplanetInfo) {
-          exoplanetInfo.style.display = 'none';
-          exoplanetInfo.classList.remove('visible');
-        }
-      }
     }); 
   }
 
@@ -151,13 +133,11 @@ window.addEventListener('load', async function () {
     sections[sectionId].classList.add('active');
     resetAnimations(sectionId);
     if (pushState) history.pushState({ section: sectionId }, '', `#${sectionId}`);
-    // Scroll to top only for non-beginner sections
     if (sectionId !== 'beginner') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
 
-  // Navigation menu
   document.querySelectorAll('nav .nav-link').forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -166,26 +146,22 @@ window.addEventListener('load', async function () {
     });
   });
 
-  // history: back/forward arrows
   window.addEventListener('popstate', (e) => {
     const sectionId = e.state?.section || 'getStarted';
     hideAll();
     sections[sectionId].style.display = 'block';
     sections[sectionId].classList.add('active');
     resetAnimations(sectionId);
-    // Scroll to top only for non-beginner sections
     if (sectionId !== 'beginner') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   });
 
-  // init
   hideAll();
   sections.getStarted.style.display = 'block';
   sections.getStarted.classList.add('active');
   history.replaceState({ section: 'getStarted' }, '', '#getStarted');
 
-  // Get Started → Level Selection
   const getStartedBtn = document.querySelector('#get-started-section .btn');
   getStartedBtn.addEventListener('click', (e) => {
     e.preventDefault();
@@ -195,7 +171,6 @@ window.addEventListener('load', async function () {
     showSection('levelSelection');
   });
 
-  // Beginner / Scientist buttons
   const beginnerBtn = document.querySelector('#level-selection-section .level-buttons .btn:nth-child(1)');
   const scientistBtn = document.querySelector('#level-selection-section .level-buttons .btn:nth-child(2)');
 
@@ -229,7 +204,6 @@ window.addEventListener('load', async function () {
     'koi_srad':        {min: 0.1, max: 10,     step: 0.01,  value: 1.0}
   };
 
-  // DOM
   const presetSelect = document.querySelector('.preset-select');
   const sliderContainers = {
     'koi_period':      document.getElementById('orbital-sliders'),
@@ -244,7 +218,6 @@ window.addEventListener('load', async function () {
     'koi_srad':        document.getElementById('stellar-sliders')
   };
 
-  // Planet visualization elements
   const percentageValue = document.querySelector('.percentage-value');
   const predictionStatus = document.querySelector('.prediction-status');
   const planetRing = document.querySelector('.planet-ring');
@@ -252,7 +225,6 @@ window.addEventListener('load', async function () {
   const gradientMain = document.querySelector('.planet-gradient-main');
   const gradientDark = document.querySelector('.planet-gradient-dark');
 
-  // Debounce timer for real-time prediction
   let predictionTimer = null;
 
   function getPlanetColors(probability) {
@@ -271,18 +243,15 @@ window.addEventListener('load', async function () {
   function updatePlanetVisualization(probability) {
     const colors = getPlanetColors(probability);
     
-    // Update gradient colors
     gradientLight.style.stopColor = colors.light;
     gradientMain.style.stopColor = colors.main;
     gradientDark.style.stopColor = colors.dark;
     
-    // Update ring progress
-    const circumference = 2 * Math.PI * 140; // 879.6
+    const circumference = 2 * Math.PI * 140;
     const progress = (probability / 100) * circumference;
     planetRing.setAttribute('stroke-dasharray', `${progress} ${circumference}`);
     planetRing.setAttribute('stroke', colors.main);
     
-    // Update percentage text
     percentageValue.textContent = `${probability}%`;
   }
 
@@ -344,7 +313,6 @@ window.addEventListener('load', async function () {
       slider.addEventListener('input', () => {
         valueSpan.textContent = slider.value;
         
-        // Debounced prediction
         clearTimeout(predictionTimer);
         predictionTimer = setTimeout(() => {
           predictFromSliders();
@@ -358,11 +326,9 @@ window.addEventListener('load', async function () {
       sliderContainers[col].appendChild(wrap);
     });
     
-    // Initial prediction
     setTimeout(() => predictFromSliders(), 100);
   }
 
-  // fetch presets
   let presets = [];
   try {
     const resp = await fetch('http://127.0.0.1:5000/presets');
@@ -420,37 +386,6 @@ window.addEventListener('load', async function () {
     });
   }
 
-  /* ========= MODAL FOR VIDEO VISUALIZATION ========= */
-  const showVisualizationBtn = document.querySelector('.show-visualization');
-  const videoModal = document.querySelector('#videoModal');
-  const closeModal = document.querySelector('.close-modal');
-
-  if (showVisualizationBtn && videoModal && closeModal) {
-    showVisualizationBtn.addEventListener('click', () => {
-      videoModal.style.display = 'flex';
-    });
-
-    closeModal.addEventListener('click', () => {
-      videoModal.style.display = 'none';
-      const video = videoModal.querySelector('.transit-video');
-      if (video) {
-        video.pause();
-        video.currentTime = 0;
-      }
-    });
-
-    videoModal.addEventListener('click', (e) => {
-      if (e.target === videoModal) {
-        videoModal.style.display = 'none';
-        const video = videoModal.querySelector('.transit-video');
-        if (video) {
-          video.pause();
-          video.currentTime = 0;
-        }
-      }
-    });
-  }
-
   /* ========= SCROLL OBSERVER FOR SECTION BLOCKS ========= */
   const sectionBlocks = document.querySelectorAll('.section-block');
   const observer = new IntersectionObserver((entries) => {
@@ -458,15 +393,15 @@ window.addEventListener('load', async function () {
       if (entry.isIntersecting) {
         entry.target.classList.add('visible');
         const video = entry.target.querySelector('.section-video');
-        if (video) {
-          video.style.opacity = 1;
-        }
+        const image = entry.target.querySelector('.section-image');
+        if (video) video.style.opacity = 1;
+        if (image) image.style.opacity = 1;
       } else {
         entry.target.classList.remove('visible');
         const video = entry.target.querySelector('.section-video');
-        if (video) {
-          video.style.opacity = 0;
-        }
+        const image = entry.target.querySelector('.section-image');
+        if (video) video.style.opacity = 0;
+        if (image) image.style.opacity = 0;
       }
     });
   }, { threshold: 0.5 });
