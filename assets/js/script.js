@@ -235,7 +235,7 @@ window.addEventListener('load', async function () {
   const achievementCount = document.getElementById('achievementCount');
   
   // Achievement definitions
-  const achievements = {
+const achievements = {
     firstPlanet: {
       id: 'firstPlanet',
       name: 'The First Whisper',
@@ -245,25 +245,25 @@ window.addEventListener('load', async function () {
     cosmicStillness: {
       id: 'cosmicStillness',
       name: 'Cosmic Stillness',
-      description: 'Ты ничего не делал 5 минут. Космос оценил твоё спокойствие.',
+      description: 'You did nothing for 5 minutes. The cosmos appreciates your serenity.',
       icon: 'media/achievement_icon.png'
     },
     edgeOfUniverse: {
       id: 'edgeOfUniverse',
       name: 'Edge of the Universe',
-      description: 'Дочитал до конца. Не каждый исследователь доходит так далеко.',
+      description: 'Read to the very end. Not every researcher makes it this far.',
       icon: 'media/achievement_icon.png'
     },
     almostGod: {
       id: 'almostGod',
       name: 'Almost a God Model',
-      description: '98%. Твоё предсказание заставило Kepler встать и аплодировать.',
+      description: '98%. Your prediction made Kepler stand up and applaud.',
       icon: 'media/achievement_icon.png'
     },
     emptySkies: {
       id: 'emptySkies',
       name: 'Empty Skies',
-      description: 'Пять попыток — и всё мимо. Не грусти: даже космос иногда молчит.',
+      description: 'Five attempts—and all misses. Don’t be sad: even the cosmos is sometimes silent.',
       icon: 'media/achievement_icon.png'
     }
   };
