@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import pandas as pd
 import numpy as np
@@ -103,6 +103,11 @@ stack_features = ["koi_period","koi_duration","koi_depth",
 
 # ---------- API ----------
 
+@app.route("/", methods=["GET"])
+@app.route("/index.html", methods=["GET"])
+def serve_index():
+    return send_file("index.html")
+
 @app.route("/presets", methods=["GET"])
 def get_presets():
     presets = data_phys.head(10).to_dict(orient="records")
@@ -139,11 +144,6 @@ def predict():
         prob = cnn_model(X_new_tensor).squeeze().cpu().numpy()
 
     return jsonify({"prob": float(prob)})
-
-stack_model = joblib.load("models/stacking_model.pkl")
-stack_features = ["koi_period","koi_duration","koi_depth",
-                  "koi_prad","koi_teq","koi_insol",
-                  "koi_steff","koi_srad","koi_kepmag"]
 
 @app.route("/predict_scientist", methods=["POST"])
 def predict_scientist():
