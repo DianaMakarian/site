@@ -54,12 +54,14 @@ function loop() {
   }
   context.fill();
 }
+
 function randomizeParticle(p) {
   p.x = Math.random() * canvasWidth;
   p.y = Math.random() * canvasHeight;
   p.z = Math.random() * 1500 + 500;
   return p;
 }
+
 function Particle(x, y, z) {
   this.x = x || 0;
   this.y = y || 0;
@@ -99,13 +101,14 @@ window.addEventListener('load', async function () {
     getStarted: document.getElementById('get-started-section'),
     levelSelection: document.getElementById('level-selection-section'),
     beginner: document.getElementById('beginner-section'),
-    scientist: document.getElementById('scientist-section')
+    scientist: document.getElementById('scientist-section'),
+    learnMore: document.getElementById('learnMore')
   };
 
   function resetAnimations(sectionId) {
     const section = sections[sectionId];
     if (!section) return;
-    const animatable = section.querySelectorAll('h1, .btn, .level-message, .level-buttons');
+    const animatable = section.querySelectorAll('h1, .btn, .level-message, .level-buttons, .exoplanet-info');
     animatable.forEach(el => {
       el.classList.remove('absorb', 'slide-out');
       el.style.opacity = '0';
@@ -115,15 +118,45 @@ window.addEventListener('load', async function () {
       el.style.animation = '';
       el.style.animation = 'floatInFromTop 1.5s ease-out forwards';
     });
+    // Special handling for exoplanet-info in learnMore section
+    if (sectionId === 'learnMore') {
+      const exoplanetInfo = section.querySelector('.exoplanet-info');
+      if (exoplanetInfo) {
+        exoplanetInfo.style.display = 'block';
+        exoplanetInfo.classList.add('visible');
+      }
+    }
   }
 
-  function hideAll() { Object.values(sections).forEach(sec => { sec.classList.remove('active'); sec.style.display = 'none'; }); }
+  function hideAll() { 
+    Object.values(sections).forEach(sec => { 
+      sec.classList.remove('active'); 
+      sec.style.display = 'none'; 
+      if (sec.id === 'learnMore') {
+        const exoplanetInfo = sec.querySelector('.exoplanet-info');
+        if (exoplanetInfo) {
+          exoplanetInfo.style.display = 'none';
+          exoplanetInfo.classList.remove('visible');
+        }
+      }
+    }); 
+  }
+
   function showSection(sectionId, pushState = true) {
     hideAll();
     sections[sectionId].style.display = 'block';
     setTimeout(() => { sections[sectionId].classList.add('active'); resetAnimations(sectionId); }, 10);
     if (pushState) history.pushState({ section: sectionId }, '', `#${sectionId}`);
   }
+
+  // Navigation menu
+  document.querySelectorAll('nav .nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const sectionId = link.getAttribute('href').substring(1);
+      showSection(sectionId);
+    });
+  });
 
   // history: back/forward arrows
   window.addEventListener('popstate', (e) => {
@@ -150,7 +183,7 @@ window.addEventListener('load', async function () {
   });
 
   // Beginner / Scientist buttons
-  const beginnerBtn  = document.querySelector('#level-selection-section .level-buttons .btn:nth-child(1)');
+  const beginnerBtn = document.querySelector('#level-selection-section .level-buttons .btn:nth-child(1)');
   const scientistBtn = document.querySelector('#level-selection-section .level-buttons .btn:nth-child(2)');
 
   /* ========= BEGINNER ========= */
@@ -294,9 +327,4 @@ window.addEventListener('load', async function () {
       } catch { scientistResult.textContent = 'Prediction failed.'; }
     });
   }
-
-  // back buttons
-  document.querySelectorAll('.back-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => { e.preventDefault(); showSection('levelSelection'); });
-  });
 });

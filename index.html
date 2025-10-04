@@ -8,114 +8,104 @@
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <canvas id="c"></canvas>
-  <div class="content">
+  <main>
+    <nav class="nav-section">
+      <ul>
+        <li><a href="#getStarted" class="nav-link">About Project</a></li>
+        <li><a href="#levelSelection" class="nav-link">Choose Level</a></li>
+        <li><a href="#learnMore" class="nav-link">Learn More</a></li>
+      </ul>
+    </nav>
 
-    <!-- Get Started Section -->
-    <div id="get-started-section" class="section active">
+    <canvas id="c"></canvas>
+
+    <section id="get-started-section" class="section content">
       <h1>/DOE4320/</h1>
-      <div class="project-info">
-        Project complete: Automated exoplanet detection using AI/ML on open NASA datasets. Ready for demonstration
-      </div>
+      <p class="project-info">Project complete: Automated exoplanet detection using AI/ML on open NASA datasets. Ready for demonstration</p>
       <a href="#" class="btn">Get Started</a>
-    </div>
+    </section>
 
-    <!-- Choose Your Level Section -->
-    <div id="level-selection-section" class="section">
-      <div class="level-message">New to space or a seasoned astronomer? Choose your level!</div>
+    <section id="level-selection-section" class="section content">
+      <h1>New to space or a seasoned astronomer? Choose your level!</h1>
+      <p class="level-message">Pick your experience level to begin exploring!</p>
       <div class="level-buttons">
         <a href="#" class="btn">I’m a Beginner</a>
         <a href="#" class="btn">I’m a Scientist</a>
       </div>
-    </div>
+    </section>
 
-    <!-- Beginner Section -->
-    <div id="beginner-section" class="section">
-      <div class="beginner-section">
-        <h2>Create Your Exoplanet! Use sliders or choose a preset!</h2>
-        <label>Choose a preset:</label>
-        <select class="preset-select">
-          <option value="">Manual Input</option>
-        </select>
-        <label>Name your planet:</label>
-        <input type="text" placeholder="e.g., MyAwesomePlanet b">
-        <div class="parameter-group">
-          <h3>Orbital Characteristics</h3>
-          <div id="orbital-sliders"></div>
-        </div>
-        <div class="parameter-group">
-          <h3>Transit Characteristics</h3>
-          <div id="transit-sliders"></div>
-        </div>
-        <div class="parameter-group">
-          <h3>Planet Environment</h3>
-          <div id="planet-sliders"></div>
-        </div>
-        <div class="parameter-group">
-          <h3>Stellar Properties</h3>
-          <div id="stellar-sliders"></div>
-        </div>
-        <a href="#" class="predict-btn">Predict</a>
-        <div class="prediction-result" style="display: none;"></div>
-        <table class="parameters-table">
-          <thead>
-            <tr>
-              <th>Parameter</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+    <section id="beginner-section" class="section beginner-section">
+      <h2>Create Your Exoplanet! Use sliders or choose a preset!</h2>
+      <label for="preset-select">Choose a preset:</label>
+      <select class="preset-select" id="preset-select">
+        <option value="">Manual Input</option>
+      </select>
+      <label for="planet-name">Name your planet:</label>
+      <input type="text" id="planet-name" placeholder="Enter planet name">
+      <div class="parameter-group" id="orbital-sliders">
+        <h3>Orbital Characteristics</h3>
       </div>
-    </div>
+      <div class="parameter-group" id="transit-sliders">
+        <h3>Transit Characteristics</h3>
+      </div>
+      <div class="parameter-group" id="planet-sliders">
+        <h3>Planet Environment</h3>
+      </div>
+      <div class="parameter-group" id="stellar-sliders">
+        <h3>Stellar Properties</h3>
+      </div>
+      <a href="#" class="predict-btn">Predict</a>
+      <div class="prediction-result"></div>
+      <table class="parameters-table">
+        <thead>
+          <tr><th>Parameter</th><th>Description</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
 
-    <!-- Scientist Section -->
-    <div id="scientist-section" class="section">
+    <section id="scientist-section" class="section content">
       <h2>Manual Input for Scientists</h2>
       <p>Enter parameters for your candidate planet:</p>
-
       <form id="scientist-form">
         <label>Orbital Period (days):</label>
-        <input type="number" step="0.01" name="koi_period" required><br>
-
+        <input type="number" name="koi_period" step="any" required>
         <label>Transit Duration (hours):</label>
-        <input type="number" step="0.01" name="koi_duration" required><br>
-
+        <input type="number" name="koi_duration" step="any" required>
         <label>Transit Depth (ppm):</label>
-        <input type="number" step="0.01" name="koi_depth" required><br>
-
+        <input type="number" name="koi_depth" step="any" required>
         <label>Planet Radius (Earth radii):</label>
-        <input type="number" step="0.01" name="koi_prad" required><br>
-
+        <input type="number" name="koi_prad" step="any" required>
         <label>Equilibrium Temperature (K):</label>
-        <input type="number" step="1" name="koi_teq" required><br>
-
+        <input type="number" name="koi_teq" step="any" required>
         <label>Insolation (Earth=1):</label>
-        <input type="number" step="0.01" name="koi_insol" required><br>
-
+        <input type="number" name="koi_insol" step="any" required>
         <label>Stellar Temperature (K):</label>
-        <input type="number" step="1" name="koi_steff" required><br>
-
+        <input type="number" name="koi_steff" step="any" required>
         <label>Stellar Radius (Rsun):</label>
-        <input type="number" step="0.01" name="koi_srad" required><br>
-
+        <input type="number" name="koi_srad" step="any" required>
         <label>Kepler Magnitude:</label>
-        <input type="number" step="0.01" name="koi_kepmag" required><br>
-
-        <button type="submit" class="btn">Predict Scientist Model</button>
+        <input type="number" name="koi_kepmag" step="any" required>
+        <button type="submit" class="predict-btn">Predict Scientist Model</button>
       </form>
+      <div id="scientist-result"></div>
+    </section>
 
-      <div id="scientist-result" style="margin-top: 1rem; font-weight: bold;"></div>
-      <a href="#" class="btn back-btn">Back</a>
-    </div>
-
-    <!-- Info Section -->
-    <div class="exoplanet-info">
+    <section id="exoplanet-info" class="exoplanet-info">
       <h2>About Exoplanets</h2>
       <p>Exoplanets, or extrasolar planets, are planets that orbit stars outside our Solar System...</p>
-    </div>
+    </section>
 
-  </div>
+    <section id="learnMore" class="section content">
+      <h2>The Kepler Mission</h2>
+      <div class="exoplanet-info">
+        <p>The Kepler Mission, launched by NASA in 2009, was designed to discover Earth-like planets orbiting other stars. Using a space telescope, Kepler observed over 150,000 stars in a fixed field of view to detect the tiny dips in brightness caused by planets transiting their host stars.</p>
+        <p>Kepler's primary mission ran until 2013, followed by the K2 mission until 2018, resulting in the discovery of thousands of exoplanets. Its data has been instrumental in advancing our understanding of planetary systems and the potential for life beyond Earth.</p>
+        <p>This project leverages Kepler's open datasets to train AI/ML models for automated exoplanet detection, allowing users to explore and predict exoplanet candidates interactively.</p>
+      </div>
+    </section>
+  </main>
+
   <script src="assets/js/script.js"></script>
 </body>
 </html>

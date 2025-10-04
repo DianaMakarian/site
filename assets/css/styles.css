@@ -8,8 +8,53 @@
 /* Общие стили для страницы */
 html, body {
   margin: 0;
+  padding: 0;
+  min-height: 100vh; /* Allow page to grow if content overflows */
   font-family: 'Fira Code', monospace;
   color: #ffffff;
+}
+
+main {
+  min-height: 100vh; /* Ensure main fills viewport height */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Стили для навигационного меню */
+.nav-section {
+  width: 100%;
+  background: transparent; /* Fully transparent background */
+  z-index: 10;
+  padding: 1rem 0;
+  text-align: center;
+  flex-shrink: 0; /* Prevent nav from shrinking */
+}
+
+.nav-section ul {
+  display: flex;
+  list-style-type: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.nav-section li {
+  margin: 0 1.5rem;
+}
+
+.nav-section .nav-link {
+  text-decoration: none;
+  font-size: 1.15rem;
+  font-family: 'Fira Code', monospace;
+  background-image: linear-gradient(#6b728e 50%, #ffffff 50%);
+  background-size: 100% 200%;
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  transition: all 550ms ease-in-out;
+}
+
+.nav-section .nav-link:hover {
+  background-position: 0% 100%;
 }
 
 /* Стили для канваса с космическим фоном */
@@ -25,13 +70,14 @@ canvas {
 .content {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
+  flex-grow: 1; /* Take remaining space */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
   padding: 2rem;
+  box-sizing: border-box;
 }
 
 /* Стили для секций */
@@ -115,11 +161,6 @@ h1 {
   z-index: 1;
 }
 
-/* Стили для кнопки возврата */
-.back-btn {
-  margin-top: 2rem;
-}
-
 /* Стили для сообщений над выбором файла или уровнем */
 .file-message, .level-message {
   font-size: 1.4rem;
@@ -153,20 +194,17 @@ h1 {
 
 /* Стили для блока с информацией о проекте */
 .project-info {
-  /* Фиксированное позиционирование внизу экрана */
   position: fixed;
   bottom: 2rem;
-  /* Центрирование по горизонтали */
   left: 50%;
   transform: translateX(-50%);
-  /* Адаптивная ширина для текста */
   width: fit-content;
   max-width: 80%;
-  /* Центрирование текста внутри */
   text-align: center;
   animation: floatInFromBottom 1.5s ease-out forwards;
 }
-/* Стили для секции с информацией об экзопланете */
+
+/* Стили для секции с информацией об экзопланете и Learn More */
 .exoplanet-info {
   display: none;
   position: relative;
@@ -232,7 +270,7 @@ h1 {
 }
 
 .beginner-section input[type="text"],
-.beginner-section select.preset-select,.parameter-group {
+.beginner-section select.preset-select, .parameter-group {
   width: 90%;
   max-width: 750px;
   padding: 1rem;
@@ -278,7 +316,6 @@ h1 {
 .predict-btn:hover {
   --r: 100%;
 }
-
 
 .parameter-group h3 {
   font-size: 1.5rem;
@@ -382,11 +419,11 @@ h1 {
 @keyframes floatInFromBottom {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(30px); /* Сохраняем центрирование по X */
+    transform: translateY(50px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0); /* Сохраняем центрирование по X */
+    transform: translateY(0);
   }
 }
 
@@ -413,7 +450,14 @@ h1 {
 }
 
 /* Адаптивность для мобильных устройств */
-@media (max-width: 480px) {
+@media (max-width: 576px) {
+  .nav-section ul {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .nav-section li {
+    margin: 1rem 0;
+  }
   h1 { font-size: 3rem; }
   .level-message { font-size: 1.1rem; }
   .btn { padding: 0.8rem 1.5rem; font-size: 1rem; }
@@ -479,5 +523,4 @@ h1 {
     max-width: 100%;
     font-size: 0.9rem;
   }
-
 }
