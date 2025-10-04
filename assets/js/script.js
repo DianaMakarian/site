@@ -151,8 +151,10 @@ window.addEventListener('load', async function () {
     sections[sectionId].classList.add('active');
     resetAnimations(sectionId);
     if (pushState) history.pushState({ section: sectionId }, '', `#${sectionId}`);
-    // Scroll to top when changing sections
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to top only for non-beginner sections
+    if (sectionId !== 'beginner') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 
   // Navigation menu
@@ -171,7 +173,10 @@ window.addEventListener('load', async function () {
     sections[sectionId].style.display = 'block';
     sections[sectionId].classList.add('active');
     resetAnimations(sectionId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Scroll to top only for non-beginner sections
+    if (sectionId !== 'beginner') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   });
 
   // init

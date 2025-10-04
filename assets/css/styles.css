@@ -1,28 +1,4 @@
-.beginner-section { 
-    width: 95%; 
-    padding: 1.5rem; 
-  }
-  .beginner-container {
-    flex-direction: column;
-    gap: 2rem;
-  }
-  .planet-visualization {
-    position: relative;
-    top: 0;
-    width: 100%;
-    min-width: 100%;
-    order: -1;
-  }
-  .planet-container {
-    width: 280px;
-    height: 280px;
-    margin: 0 auto;
-  }
-  .planet-svg {
-    width: 280px;
-    height: 280px;
-  }
-  .percentage-value/* Визначення кастомного властивості для радіального градієнта */
+/* Визначення кастомного властивості для радіального градієнта */
 @property --r {
   syntax: '<length-percentage>';
   initial-value: 0px;
@@ -32,13 +8,12 @@
 /* Загальні стилі для сторінки */
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y mandatory; /* Changed to mandatory for better snap */
 }
 
 html, body {
   margin: 0;
   padding: 0;
-  min-height: 100vh;
+  height: 100%;
   font-family: 'Fira Code', monospace;
   color: #ffffff;
   overflow-x: hidden;
@@ -46,10 +21,13 @@ html, body {
   max-width: 100vw;
 }
 
+body {
+  overflow-y: auto;
+}
+
 main {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  width: 100%;
 }
 
 /* Стилі для навігаційного меню */
@@ -93,7 +71,7 @@ main {
   background-position: 0% 100%;
 }
 
-/* Стилі для канваса з космічним фоном */
+/* Стилі для канвасу з космічним фоном */
 canvas {
   position: fixed;
   inset: 0;
@@ -120,6 +98,7 @@ canvas {
   width: 100%;
   opacity: 0;
   transition: opacity 0.6s ease;
+  position: relative;
 }
 
 .section.active {
@@ -133,9 +112,8 @@ canvas {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Exact viewport height */
+  height: 100vh;
   text-align: center;
-  scroll-snap-align: start;
   padding: 2rem;
   box-sizing: border-box;
   max-width: 100%;
@@ -186,7 +164,7 @@ h2 {
   align-items: center;
   justify-content: center;
   max-width: 1200px;
-  width: 90%;
+  width: 100%;
   min-height: 100vh;
   margin: 0 auto;
   padding: 3rem 2rem;
@@ -195,7 +173,6 @@ h2 {
   opacity: 0;
   transform: translateY(30px);
   transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-  scroll-snap-align: center; /* Center snap for better UX */
 }
 
 .section-block.visible {
@@ -212,7 +189,7 @@ h2 {
   align-items: center;
   text-align: center;
   padding: 2rem;
-  min-height: auto; /* Allow centered blocks to be shorter */
+  min-height: auto;
 }
 
 .section-video {
@@ -385,7 +362,7 @@ h2 {
   color: #ffffff;
   text-shadow: 0 0 15px rgb(255, 255, 255, 0.5);
   margin-bottom: 2rem;
-  margin-top: 8rem;
+  margin-top: 2rem;
   opacity: 0;
   animation: floatInFromTop 0.8s ease-out forwards 0.3s;
   text-align: center;
@@ -563,13 +540,14 @@ h2 {
 .beginner-section {
   width: 90%;
   max-width: 1400px;
-  margin: 2rem auto;
+  margin: 0 auto;
   padding: 2rem;
   background: transparent;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100vh;
 }
 
 .beginner-container {
@@ -577,6 +555,7 @@ h2 {
   gap: 3rem;
   width: 100%;
   align-items: flex-start;
+  flex-direction: row;
 }
 
 .beginner-controls {
@@ -642,7 +621,7 @@ h2 {
   box-sizing: border-box;
 }
 
-/* Planet visualization */
+/* Planet visualization - закреплена справа */
 .planet-visualization {
   position: sticky;
   top: 8rem;
@@ -650,7 +629,12 @@ h2 {
   flex-direction: column;
   align-items: center;
   min-width: 380px;
+  max-width: 380px;
   gap: 1.5rem;
+  align-self: flex-start;
+  flex-shrink: 0;
+  height: fit-content;
+  z-index: 5;
 }
 
 .planet-container {
@@ -905,6 +889,15 @@ h2 {
   }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 /* Адаптивність для мобільних пристроїв */
 @media (max-width: 768px) {
   .section-block {
@@ -921,6 +914,29 @@ h2 {
   
   .section-text {
     padding: 1.5rem;
+  }
+  
+  .beginner-container {
+    flex-direction: column;
+  }
+  
+  .planet-visualization {
+    position: relative;
+    top: 0;
+    width: 100%;
+    max-width: 100%;
+    order: -1;
+  }
+  
+  .planet-container {
+    width: 280px;
+    height: 280px;
+    margin: 0 auto;
+  }
+  
+  .planet-svg {
+    width: 280px;
+    height: 280px;
   }
 }
 
@@ -940,7 +956,6 @@ h2 {
   }
   .section-block {
     padding: 1.5rem 1rem;
-    scroll-snap-align: none;
   }
   .section-text h3 {
     font-size: 1.3rem;
@@ -975,5 +990,8 @@ h2 {
   .slider-div .slider-wrapper {
     width: 100%;
     gap: 0.5rem;
+  }
+  .percentage-value {
+    font-size: 3.5rem;
   }
 }
