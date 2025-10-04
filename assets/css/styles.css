@@ -392,7 +392,178 @@ h2 {
 }
 
 /* Стилі для секції для початківців */
+/* Beginner section positioning */
 .beginner-section {
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: transparent;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Achievement Status Bar */
+.achievement-status {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: rgba(15, 15, 30, 0.9);
+  border: 2px solid rgba(107, 114, 142, 0.4);
+  border-radius: 10px;
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.achievement-status:hover {
+  border-color: rgba(107, 114, 142, 0.7);
+  transform: translateY(-2px);
+}
+
+.achievement-icon {
+  font-size: 1.5rem;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.achievement-status.completed .achievement-icon {
+  filter: grayscale(0%);
+  animation: trophyGlow 2s ease-in-out infinite;
+}
+
+.achievement-text {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+/* Achievement Notification (Steam Style) */
+.achievement-notification {
+  position: fixed;
+  bottom: -250px;
+  right: 2rem;
+  width: 400px;
+  background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%);
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4), 0 0 60px rgba(59, 130, 246, 0.2);
+  padding: 0;
+  z-index: 10000;
+  transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  overflow: hidden;
+}
+
+.achievement-notification::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.achievement-notification.show {
+  bottom: 2rem;
+  animation: achievementBounce 0.6s ease-out;
+}
+
+.achievement-content {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.2rem;
+}
+
+.achievement-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 6px;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.achievement-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.achievement-header {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.achievement-name {
+  font-family: 'Fira Code', monospace;
+  font-size: 1.3rem;
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.achievement-description {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+/* Achievement Animations */
+@keyframes achievementBounce {
+  0% {
+    bottom: -250px;
+    transform: scale(0.8);
+  }
+  50% {
+    bottom: 2.5rem;
+    transform: scale(1.05);
+  }
+  100% {
+    bottom: 2rem;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes trophyGlow {
+  0%, 100% {
+    filter: grayscale(0%) drop-shadow(0 0 3px #ffd700);
+  }
+  50% {
+    filter: grayscale(0%) drop-shadow(0 0 8px #ffd700);
+  }
+}
+
+.beginner-container {
   width: 90%;
   max-width: 1400px;
   margin: 0 auto;
@@ -848,5 +1019,161 @@ h2 {
   }
   .percentage-value {
     font-size: 3.5rem;
+  }
+}
+
+/* Achievement Status */
+.achievement-status {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: rgba(15, 15, 30, 0.9);
+  border: 2px solid rgba(107, 114, 142, 0.4);
+  border-radius: 10px;
+  padding: 0.8rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+
+.achievement-status:hover {
+  border-color: rgba(107, 114, 142, 0.7);
+  transform: translateY(-2px);
+}
+
+.achievement-icon {
+  font-size: 1.5rem;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.achievement-status.completed .achievement-icon {
+  filter: grayscale(0%);
+  animation: trophyGlow 2s ease-in-out infinite;
+}
+
+.achievement-text {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+/* Achievement Notification */
+.achievement-notification {
+  position: fixed;
+  bottom: -200px;
+  right: 2rem;
+  width: 380px;
+  background: linear-gradient(135deg, #1a1f2e 0%, #2d3748 100%);
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4), 0 0 60px rgba(59, 130, 246, 0.2);
+  padding: 0;
+  z-index: 1000;
+  transition: bottom 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  overflow: hidden;
+}
+
+.achievement-notification::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa, #3b82f6);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.achievement-notification.show {
+  bottom: 2rem;
+  animation: achievementBounce 0.6s ease-out;
+}
+
+.achievement-content {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  padding: 1.2rem;
+}
+
+.achievement-image {
+  width: 80px;
+  height: 80px;
+  border-radius: 6px;
+  border: 2px solid #3b82f6;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.achievement-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.achievement-header {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+}
+
+.achievement-name {
+  font-family: 'Fira Code', monospace;
+  font-size: 1.3rem;
+  color: #ffffff;
+  font-weight: 700;
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.achievement-description {
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  color: #cbd5e1;
+  line-height: 1.4;
+}
+
+/* Achievement Animations */
+@keyframes achievementBounce {
+  0% {
+    bottom: -200px;
+    transform: scale(0.8);
+  }
+  50% {
+    bottom: 2.5rem;
+    transform: scale(1.05);
+  }
+  100% {
+    bottom: 2rem;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes trophyGlow {
+  0%, 100% {
+    filter: grayscale(0%) drop-shadow(0 0 3px #ffd700);
+  }
+  50% {
+    filter: grayscale(0%) drop-shadow(0 0 8px #ffd700);
   }
 }

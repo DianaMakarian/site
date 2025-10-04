@@ -227,6 +227,43 @@ window.addEventListener('load', async function () {
 
   let predictionTimer = null;
 
+  // Achievement system
+  const achievementNotification = document.getElementById('achievementNotification');
+  const achievementSound = document.getElementById('achievementSound');
+  const achievementStatus = document.querySelector('.achievement-status');
+  const achievementText = document.querySelector('.achievement-text');
+  
+  // Check if achievement is already unlocked
+  let achievementUnlocked = localStorage.getItem('firstPlanetAchievement') === 'true';
+  
+  if (achievementUnlocked) {
+    achievementStatus.classList.add('completed');
+    achievementText.textContent = 'All achievements unlocked!';
+  }
+  
+  function unlockAchievement() {
+    if (achievementUnlocked) return;
+    
+    achievementUnlocked = true;
+    localStorage.setItem('firstPlanetAchievement', 'true');
+    
+    // Update status
+    achievementStatus.classList.add('completed');
+    achievementText.textContent = 'All achievements unlocked!';
+    
+    // Play sound
+    achievementSound.currentTime = 0;
+    achievementSound.play().catch(e => console.log('Audio play failed:', e));
+    
+    // Show notification
+    achievementNotification.classList.add('show');
+    
+    // Hide after 5 seconds
+    setTimeout(() => {
+      achievementNotification.classList.remove('show');
+    }, 5000);
+  }
+
   function getPlanetColors(probability) {
     if (probability >= 75) {
       return { light: '#60a5fa', main: '#3b82f6', dark: '#1e40af' };
@@ -279,6 +316,11 @@ window.addEventListener('load', async function () {
       updatePlanetVisualization(parseFloat(probability));
       predictionStatus.textContent = 'Real-time prediction from CNN model';
       predictionStatus.classList.remove('loading');
+      
+      // Check for achievement unlock (75% or higher = likely exoplanet)
+      if (parseFloat(probability) >= 75) {
+        unlockAchievement();
+      }
     } catch (error) {
       predictionStatus.textContent = 'Prediction failed';
       predictionStatus.classList.remove('loading');

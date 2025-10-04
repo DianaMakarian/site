@@ -93,6 +93,12 @@
     </section>
 
     <section id="beginner-section" class="section beginner-section">
+      <!-- Achievement Status Bar -->
+      <div class="achievement-status" id="achievementStatus">
+        <span class="achievement-icon">🏆</span>
+        <span class="achievement-text">1 hidden achievement remaining</span>
+      </div>
+
       <div class="beginner-container">
         <div class="beginner-controls">
           <h2>Create Your Exoplanet!</h2>
@@ -157,6 +163,24 @@
         <p>This calculator uses a Convolutional Neural Network (CNN) trained on NASA's Kepler Objects of Interest (KOI) dataset. The model analyzes 10 key parameters including orbital characteristics, transit properties, and stellar features to predict the probability that a celestial object is an exoplanet candidate. Predictions update in real-time as you adjust the parameters.</p>
       </div>
     </section>
+
+    <!-- Achievement Notification (Steam Style) -->
+    <div class="achievement-notification" id="achievementNotification">
+      <div class="achievement-content">
+        <img src="media/achievement_icon.png" alt="Achievement" class="achievement-image">
+        <div class="achievement-details">
+          <div class="achievement-header">Achievement Unlocked</div>
+          <div class="achievement-name">The First Whisper</div>
+          <div class="achievement-description">Discover your first exoplanet candidate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievement Sound -->
+    <audio id="achievementSound" preload="auto">
+      <source src="media/achievement_sound.mp3" type="audio/mpeg">
+      <source src="media/achievement_sound.ogg" type="audio/ogg">
+    </audio>
 
     <section id="scientist-section" class="section content">
       <h2>Manual Input for Scientists</h2>
