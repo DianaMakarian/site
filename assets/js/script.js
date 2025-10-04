@@ -451,6 +451,31 @@ window.addEventListener('load', async function () {
     });
   }
 
+  /* ========= NASA EYES IFRAME MODAL ========= */
+  const showNasaEyesBtn = document.querySelector('.show-nasa-eyes');
+  const nasaEyesModal = document.querySelector('#nasaEyesModal');
+  const closeNasaEyes = document.querySelector('.close-nasa-eyes');
+
+  if (showNasaEyesBtn && nasaEyesModal && closeNasaEyes) {
+    showNasaEyesBtn.addEventListener('click', () => {
+      nasaEyesModal.style.display = 'flex';
+      const iframe = nasaEyesModal.querySelector('.nasa-eyes-iframe');
+      if (iframe && !iframe.src) {
+        iframe.src = 'https://eyes.nasa.gov/apps/exo/?destinations=/alien-worlds/strange-new-worlds/#/planet/Kepler-22_b/';
+      }
+    });
+
+    closeNasaEyes.addEventListener('click', () => {
+      nasaEyesModal.style.display = 'none';
+    });
+
+    nasaEyesModal.addEventListener('click', (e) => {
+      if (e.target === nasaEyesModal) {
+        nasaEyesModal.style.display = 'none';
+      }
+    });
+  }
+
   /* ========= SCROLL OBSERVER FOR SECTION BLOCKS ========= */
   const sectionBlocks = document.querySelectorAll('.section-block');
   const observer = new IntersectionObserver((entries) => {

@@ -33,7 +33,7 @@ main {
 /* Стилі для навігаційного меню */
 .nav-section {
   width: 100%;
-  background: rgb(15, 15, 30, 0.8);
+  background: transparent;
   z-index: 10;
   padding: 2rem 0;
   text-align: center;
@@ -275,7 +275,7 @@ h2 {
 }
 
 /* Стилі для кнопки Show Visualization */
-.show-visualization {
+.show-visualization, .show-nasa-eyes {
   margin: 1.5rem 0;
 }
 
