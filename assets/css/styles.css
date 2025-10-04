@@ -1,38 +1,41 @@
-/* Определение кастомного свойства для радиального градиента */
+/* Визначення кастомного властивості для радіального градієнта */
 @property --r {
   syntax: '<length-percentage>';
   initial-value: 0px;
   inherits: false;
 }
 
-/* Общие стили для страницы */
+/* Загальні стилі для сторінки */
 html {
-  scroll-behavior: smooth; /* Smooth scrolling */
-  scroll-snap-type: y proximity; /* Softer snapping */
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory; /* Changed to mandatory for better snap */
 }
 
 html, body {
   margin: 0;
   padding: 0;
-  min-height: 100vh; /* Allow page to grow if content overflows */
+  min-height: 100vh;
   font-family: 'Fira Code', monospace;
   color: #ffffff;
+  overflow-x: hidden;
 }
 
 main {
-  min-height: 100vh; /* Ensure main fills viewport height */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
-/* Стили для навигационного меню */
+/* Стилі для навігаційного меню */
 .nav-section {
   width: 100%;
-  background: transparent; /* Fully transparent background */
+  background: transparent;
   z-index: 10;
-  padding: 1rem 0;
+  padding: 2rem 0;
   text-align: center;
-  flex-shrink: 0; /* Prevent nav from shrinking */
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
 }
 
 .nav-section ul {
@@ -40,6 +43,8 @@ main {
   list-style-type: none;
   justify-content: center;
   align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-section li {
@@ -62,7 +67,7 @@ main {
   background-position: 0% 100%;
 }
 
-/* Стили для канваса с космическим фоном */
+/* Стилі для канваса з космічним фоном */
 canvas {
   position: fixed;
   inset: 0;
@@ -71,11 +76,11 @@ canvas {
   z-index: -1;
 }
 
-/* Стили для центрального контента */
+/* Стилі для центрального контенту */
 .content {
   position: relative;
   z-index: 1;
-  flex-grow: 1; /* Take remaining space */
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,12 +88,12 @@ canvas {
   box-sizing: border-box;
 }
 
-/* Стили для секций */
+/* Стилі для секцій */
 .section {
   display: none;
   width: 100%;
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.6s ease;
 }
 
 .section.active {
@@ -96,26 +101,27 @@ canvas {
   opacity: 1;
 }
 
-/* Стили для заголовков в get-started-section */
+/* Стилі для заголовків в get-started-section */
 .header-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh; /* Full viewport height for header */
+  height: 100vh; /* Exact viewport height */
   text-align: center;
-  scroll-snap-align: start; /* Snap to top */
+  scroll-snap-align: start;
+  padding: 2rem;
 }
 
 h1 {
-  font-size: 5rem;
+  font-size: 4rem;
   margin: 0 0 1rem;
   font-weight: 700;
   letter-spacing: 3px;
   color: #ffffff;
   text-shadow: 0 0 20px rgb(255, 255, 255, 0.3);
   opacity: 0;
-  animation: floatInFromTop 0.5s ease-out forwards;
+  animation: floatInFromTop 0.8s ease-out forwards;
 }
 
 h2 {
@@ -124,23 +130,33 @@ h2 {
   margin-bottom: 1rem;
   text-shadow: 0 0 10px rgb(255, 255, 255, 0.3);
   opacity: 0;
-  animation: floatInFromTop 0.5s ease-out forwards 0.2s; /* Slight delay for h2 */
+  animation: floatInFromTop 0.8s ease-out forwards 0.3s;
 }
 
-/* Стили для блоков контента в get-started-section */
+/* Special styling for level selection title */
+#level-selection-section h1 {
+  font-size: 2rem;
+  text-align: center;
+  max-width: 900px;
+  margin: 0 auto 1rem;
+}
+
+/* Стилі для блоків контенту в get-started-section */
 .section-block {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   max-width: 1200px;
-  width: 100%;
-  height: 100vh; /* Full viewport height for each block */
-  padding: 2rem;
+  width: 90%;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 3rem 2rem;
   box-sizing: border-box;
+  gap: 3rem;
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-  scroll-snap-align: start; /* Snap to top */
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  scroll-snap-align: center; /* Center snap for better UX */
 }
 
 .section-block.visible {
@@ -156,44 +172,48 @@ h2 {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding: 2rem;
+  min-height: auto; /* Allow centered blocks to be shorter */
 }
 
 .section-video {
-  position: sticky;
-  top: 50vh; /* Center vertically */
-  transform: translateY(-50%);
-  width: 50%;
-  max-width: 600px; /* Larger size as requested */
+  width: 45%;
+  max-width: 500px;
   border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.8); /* Black shadow for blending */
-  transition: opacity 0.5s ease-out;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  flex-shrink: 0;
 }
 
 .section-text {
-  width: 50%;
-  padding: 1.5rem;
-  background: rgb(15, 15, 30, 0.7);
+  width: 45%;
+  max-width: 550px;
+  padding: 2rem;
+  background: rgb(15, 15, 30, 0.8);
   border-radius: 10px;
   text-align: left;
+  backdrop-filter: blur(10px);
 }
 
 .section-text.centered-text {
   width: 100%;
   max-width: 800px;
-  text-align: center;
-  background: rgb(15, 15, 30, 0.7); /* Restore background */
+  text-align: justify;
+  background: rgb(15, 15, 30, 0.8);
+  margin-bottom: 2rem;
 }
 
 .section-text h3 {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   text-shadow: 0 0 8px rgb(255, 255, 255, 0.3);
+  color: #e8eaf0;
 }
 
 .section-text p {
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.05rem;
+  line-height: 1.8;
   margin-bottom: 1rem;
   font-weight: 400;
 }
@@ -204,12 +224,13 @@ h2 {
 }
 
 .section-text ul li {
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 1.05rem;
+  line-height: 1.8;
   font-weight: 400;
+  margin-bottom: 0.5rem;
 }
 
-/* Стили для кнопок */
+/* Стилі для кнопок */
 .btn {
   display: inline-block;
   padding: 1rem 2rem;
@@ -226,22 +247,23 @@ h2 {
       #6b728e calc(var(--r) - 1px), #4b5563 var(--r)) 
     border-box;
   font-family: 'Fira Code', monospace;
-  transition: --r 0.35s ease;
+  transition: --r 0.35s ease, transform 0.3s ease;
   position: relative;
   opacity: 0;
-  animation: floatInFromTop 0.5s ease-out forwards;
+  animation: floatInFromTop 0.8s ease-out forwards 0.5s;
 }
 
 .btn:hover {
   --r: 100%;
+  transform: translateY(-2px);
 }
 
-/* Стили для кнопки Show Visualization */
+/* Стилі для кнопки Show Visualization */
 .show-visualization {
   margin: 1.5rem 0;
 }
 
-/* Стили для модального окна */
+/* Стилі для модального вікна */
 .modal {
   display: none;
   position: fixed;
@@ -256,7 +278,7 @@ h2 {
 }
 
 .modal-content {
-  background: rgb(15, 15, 30, 0.9);
+  background: rgb(15, 15, 30, 0.95);
   padding: 2rem;
   border-radius: 10px;
   position: relative;
@@ -273,13 +295,14 @@ h2 {
   font-size: 2rem;
   cursor: pointer;
   text-shadow: 0 0 10px rgb(255, 255, 255, 0.3);
+  transition: color 0.3s ease;
 }
 
 .close-modal:hover {
   color: #6b728e;
 }
 
-/* Стили для видео в модальном окне */
+/* Стилі для відео в модальному вікні */
 .transit-video {
   max-width: 100%;
   width: 500px;
@@ -287,14 +310,14 @@ h2 {
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
-/* Стили для кнопки выбора файла */
+/* Стилі для кнопки вибору файлу */
 .btn.file-input {
   padding: 1rem 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  animation: floatInFromTop 0.5s ease-out forwards;
+  animation: floatInFromTop 0.8s ease-out forwards 0.5s;
   opacity: 0;
   background: 
     radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
@@ -315,28 +338,32 @@ h2 {
   z-index: 1;
 }
 
-/* Стили для сообщений над выбором файла или уровнем */
+/* Стилі для повідомлень над вибором файлу або рівнем */
 .file-message, .level-message {
   font-size: 1.4rem;
   font-weight: 300;
   letter-spacing: 1px;
   color: #ffffff;
   text-shadow: 0 0 15px rgb(255, 255, 255, 0.5);
-  margin-bottom: 1.2rem;
+  margin-bottom: 2rem;
   opacity: 0;
-  animation: floatInFromTop 0.5s ease-out forwards;
+  animation: floatInFromTop 0.8s ease-out forwards 0.3s;
+  text-align: center;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* Стили для текста в get-started-section */
+/* Стилі для тексту в get-started-section */
 .intro-text {
   max-width: 800px;
   text-align: left;
-  background: rgb(15, 15, 30, 0.7);
+  background: rgb(15, 15, 30, 0.8);
   padding: 1.5rem;
   border-radius: 10px;
   margin-bottom: 1.5rem;
   opacity: 0;
-  animation: floatInFromTop 0.5s ease-out forwards;
+  animation: floatInFromTop 0.8s ease-out forwards 0.4s;
 }
 
 .intro-text h3 {
@@ -365,7 +392,7 @@ h2 {
   font-weight: 400;
 }
 
-/* Стили для контейнера кнопок выбора уровня */
+/* Стилі для контейнера кнопок вибору рівня */
 .level-buttons {
   display: flex;
   gap: 1.5rem;
@@ -374,25 +401,30 @@ h2 {
   margin-bottom: 2rem;
 }
 
-/* Стили для контейнера блоков информации о уровнях */
+/* Стилі для контейнера блоків інформації про рівні */
 .level-info-container {
   display: flex;
   justify-content: center;
-  gap: 2rem;
-  max-width: 1000px;
+  align-items: flex-start;
+  gap: 2.5rem;
+  max-width: 1400px;
   width: 100%;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  padding: 0 2rem;
+  margin: 0 auto;
 }
 
 .level-info {
   flex: 1;
-  min-width: 300px;
-  background: rgb(15, 15, 30, 0.7);
-  padding: 1.5rem;
+  max-width: 650px;
+  min-width: 450px;
+  background: rgb(15, 15, 30, 0.8);
+  padding: 2rem;
   border-radius: 10px;
   text-align: left;
   opacity: 0;
-  animation: floatInFromTop 0.5s ease-out forwards;
+  animation: floatInFromTop 0.8s ease-out forwards;
+  backdrop-filter: blur(10px);
 }
 
 .level-info h3 {
@@ -400,6 +432,7 @@ h2 {
   font-weight: 600;
   margin-bottom: 1rem;
   text-shadow: 0 0 8px rgb(255, 255, 255, 0.3);
+  color: #e8eaf0;
 }
 
 .level-info p {
@@ -420,25 +453,26 @@ h2 {
   font-weight: 400;
 }
 
-/* Стили для секции с информацией об экзопланете и Learn More */
+/* Стилі для секції з інформацією про екзопланету та Learn More */
 .exoplanet-info {
   display: none;
   position: relative;
   z-index: 1;
   padding: 2rem;
-  max-width: 800px;
+  max-width: 900px;
   margin: 2rem auto;
-  background: rgb(15, 15, 30, 0.7);
+  background: rgb(15, 15, 30, 0.8);
   border-radius: 10px;
   text-align: left;
   color: #ffffff;
   opacity: 0;
-  transform: translateX(-50%) translateY(30px);
+  transform: translateY(30px);
+  backdrop-filter: blur(10px);
 }
 
 .exoplanet-info.visible {
   display: block;
-  animation: floatInFromBottom 0.5s ease-out forwards;
+  animation: floatInFromBottom 0.8s ease-out forwards;
 }
 
 .exoplanet-info h2 {
@@ -451,14 +485,14 @@ h2 {
 .exoplanet-info h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  margin: 1rem 0 0.5rem;
-  color: #ffffff;
+  margin: 1.5rem 0 0.5rem;
+  color: #e8eaf0;
   text-shadow: 0 0 8px rgb(255, 255, 255, 0.3);
 }
 
 .exoplanet-info p {
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.8;
   margin-bottom: 1rem;
   font-weight: 400;
 }
@@ -470,8 +504,9 @@ h2 {
 
 .exoplanet-info ul li {
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.8;
   font-weight: 400;
+  margin-bottom: 0.5rem;
 }
 
 .exoplanet-info ul li a {
@@ -484,18 +519,19 @@ h2 {
   color: #ffffff;
 }
 
-/* Стили для секции для начинающих */
+/* Стилі для секції для початківців */
 .beginner-section {
   width: 80%;
-  max-width: 800px;
+  max-width: 900px;
   margin: 2rem auto;
   padding: 2rem;
-  background: rgb(15, 15, 30, 0.7);
+  background: rgb(15, 15, 30, 0.8);
   border-radius: 10px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  backdrop-filter: blur(10px);
 }
 
 .beginner-section h2 {
@@ -505,7 +541,7 @@ h2 {
   text-shadow: 0 0 10px rgb(255, 255, 255, 0.3);
 }
 
-/* Стили для полей ввода и выпадающих списков */
+/* Стилі для полів вводу та випадаючих списків */
 .beginner-section label {
   display: block;
   margin-bottom: 0.5rem;
@@ -537,7 +573,7 @@ h2 {
   border-color: #6b728e;
 }
 
-/* Стили для кнопки предсказания */
+/* Стилі для кнопки прогнозування */
 .predict-btn {
   display: inline-block;
   padding: 0.8rem 1.5rem;
@@ -554,12 +590,13 @@ h2 {
       #6b728e calc(var(--r) - 1px), #4b5563 var(--r)) 
     border-box;
   font-family: 'Fira Code', monospace;
-  transition: --r 0.35s ease;
+  transition: --r 0.35s ease, transform 0.3s ease;
   margin-top: 1rem;
 }
 
 .predict-btn:hover {
   --r: 100%;
+  transform: translateY(-2px);
 }
 
 .parameter-group h3 {
@@ -614,7 +651,7 @@ h2 {
   text-align: center;
 }
 
-/* Стили для результата предсказания */
+/* Стилі для результату прогнозування */
 .prediction-result {
   margin-top: 2rem;
   padding: 1rem;
@@ -626,7 +663,7 @@ h2 {
   max-width: 700px;
 }
 
-/* Анимации */
+/* Анімації */
 @keyframes floatInFromTop {
   from {
     opacity: 0;
@@ -671,119 +708,75 @@ h2 {
   }
 }
 
-/* Адаптивность для мобильных устройств */
+/* Адаптивність для мобільних пристроїв */
+@media (max-width: 768px) {
+  .section-block {
+    flex-direction: column !important;
+    min-height: auto;
+    padding: 2rem 1rem;
+    gap: 2rem;
+  }
+  
+  .section-video, .section-text {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .section-text {
+    padding: 1.5rem;
+  }
+}
+
 @media (max-width: 576px) {
   .nav-section ul {
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
   }
   .nav-section li {
-    margin: 1rem 0;
+    margin: 0.5rem 0;
   }
   h1 { font-size: 3rem; }
   h2 { font-size: 1.5rem; }
   .header-container {
-    height: 80vh; /* Slightly shorter for mobile */
+    min-height: 100vh;
+    padding: 1rem;
   }
   .section-block {
-    flex-direction: column;
-    height: auto; /* Allow content to flow on mobile */
-    padding: 1rem;
-    scroll-snap-align: none; /* Disable snap on mobile for better scrolling */
-  }
-  .section-block.reverse {
-    flex-direction: column;
-  }
-  .section-video {
-    position: relative;
-    top: 0;
-    transform: none;
-    width: 100%;
-    max-width: 100%;
-    margin-bottom: 1rem;
-  }
-  .section-text {
-    width: 100%;
-    padding: 1rem;
+    padding: 1.5rem 1rem;
+    scroll-snap-align: none;
   }
   .section-text h3 {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
-  .section-text p {
-    font-size: 0.9rem;
+  .section-text p, .section-text ul li {
+    font-size: 0.95rem;
   }
-  .section-text ul li {
-    font-size: 0.9rem;
-  }
-  .level-message { font-size: 1.1rem; }
+  .level-message { font-size: 1.2rem; }
   .btn { padding: 0.8rem 1.5rem; font-size: 1rem; }
-  .btn.file-input { padding: 0.8rem 2rem; }
-  .file-message { font-size: 1.1rem; }
-  .exoplanet-info h2 { font-size: 1.5rem; }
-  .exoplanet-info h3 { font-size: 1.2rem; }
-  .exoplanet-info p { font-size: 0.9rem; }
-  .exoplanet-info ul li { font-size: 0.9rem; }
-  .transit-video { 
-    width: 100%; 
-    max-width: 100%; 
-  }
-  .modal-content { 
-    padding: 1rem; 
-  }
-  .close-modal { 
-    font-size: 1.5rem; 
-    right: 10px; 
-    top: 5px; 
-  }
   .level-buttons { flex-direction: column; gap: 1rem; }
   .level-info-container { 
     flex-direction: column; 
-    gap: 1rem; 
+    gap: 1rem;
+    padding: 0 1rem;
   }
   .level-info { 
     min-width: 100%; 
-    padding: 1rem; 
+    padding: 1.5rem; 
   }
-  .level-info h3 { font-size: 1.2rem; }
-  .level-info p { font-size: 0.9rem; }
-  .level-info ul li { font-size: 0.9rem; }
-  .beginner-section { width: 95%; padding: 1rem; }
+  .beginner-section { 
+    width: 95%; 
+    padding: 1.5rem; 
+  }
   .beginner-section input[type="text"], 
   .beginner-section select.preset-select { 
-    width: 95%;
-    max-width: 100%;
-    font-size: 1rem;
-    box-sizing: border-box;
-  }
-  .predict-btn { 
-    padding: 0.6rem 1.2rem;
+    width: 100%;
     font-size: 1rem;
   }
   .parameter-group { 
-    width: 95%;
-    max-width: 100%;
-  }
-  .parameter-group h3 {
-    font-size: 1.2rem;
-  }
-  .slider-div { 
-    margin: 1rem 0;
+    width: 100%;
   }
   .slider-div .slider-wrapper {
-    width: 95%;
-    max-width: 100%;
-    gap: 0.5rem;
-  }
-  .slider-div input[type="range"] { 
     width: 100%;
-    max-width: 100%;
-  }
-  .slider-div label {
-    font-size: 0.9rem;
-  }
-  .slider-div span {
-    font-size: 0.9rem;
-    padding: 0.2rem 0.6rem;
-    min-width: 50px;
+    gap: 0.5rem;
   }
 }

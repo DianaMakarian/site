@@ -73,6 +73,9 @@ function Particle(x, y, z) {
    Main logic
    ========================= */
 window.addEventListener('load', async function () {
+  // Scroll to top on page load/refresh
+  window.scrollTo(0, 0);
+  
   // canvas setup
   canvas = document.getElementById('c');
   function resize() {
@@ -116,7 +119,7 @@ window.addEventListener('load', async function () {
       el.style.animation = 'none';
       el.offsetHeight; // reflow
       el.style.animation = '';
-      el.style.animation = 'floatInFromTop 0.5s ease-out forwards'; // Reduced duration
+      el.style.animation = 'floatInFromTop 0.8s ease-out forwards';
     });
     // Special handling for exoplanet-info in learnMore section
     if (sectionId === 'learnMore') {
@@ -148,6 +151,8 @@ window.addEventListener('load', async function () {
     sections[sectionId].classList.add('active');
     resetAnimations(sectionId);
     if (pushState) history.pushState({ section: sectionId }, '', `#${sectionId}`);
+    // Scroll to top when changing sections
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // Navigation menu
@@ -166,6 +171,7 @@ window.addEventListener('load', async function () {
     sections[sectionId].style.display = 'block';
     sections[sectionId].classList.add('active');
     resetAnimations(sectionId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 
   // init
@@ -195,7 +201,7 @@ window.addEventListener('load', async function () {
   ];
   const simpleDescriptions = {
     'koi_period': 'Orbital period of the planet (days).',
-    'koi_duration': 'Duration of the planet’s transit (hours).',
+    'koi_duration': 'Duration of the planet\'s transit (hours).',
     'koi_impact': 'Impact parameter, related to transit trajectory.',
     'koi_depth': 'Transit depth, how much the star dims (ppm).',
     'koi_model_snr': 'Signal-to-noise ratio of the transit model.',
@@ -359,19 +365,18 @@ window.addEventListener('load', async function () {
       videoModal.style.display = 'none';
       const video = videoModal.querySelector('.transit-video');
       if (video) {
-        video.pause(); // Pause video when closing modal
-        video.currentTime = 0; // Reset to start
+        video.pause();
+        video.currentTime = 0;
       }
     });
 
-    // Close modal when clicking outside the modal content
     videoModal.addEventListener('click', (e) => {
       if (e.target === videoModal) {
         videoModal.style.display = 'none';
         const video = videoModal.querySelector('.transit-video');
         if (video) {
-          video.pause(); // Pause video when closing modal
-          video.currentTime = 0; // Reset to start
+          video.pause();
+          video.currentTime = 0;
         }
       }
     });
@@ -395,7 +400,7 @@ window.addEventListener('load', async function () {
         }
       }
     });
-  }, { threshold: 0.5 }); // Trigger when 50% of block is visible
+  }, { threshold: 0.5 });
 
   sectionBlocks.forEach(block => observer.observe(block));
 });
