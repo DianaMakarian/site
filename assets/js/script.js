@@ -232,24 +232,78 @@ window.addEventListener('load', async function () {
   const achievementSound = document.getElementById('achievementSound');
   const achievementStatus = document.querySelector('.achievement-status');
   const achievementText = document.querySelector('.achievement-text');
+  const achievementCount = document.getElementById('achievementCount');
   
-  // Check if achievement is already unlocked
-  let achievementUnlocked = localStorage.getItem('firstPlanetAchievement') === 'true';
+  // Achievement definitions
+  const achievements = {
+    firstPlanet: {
+      id: 'firstPlanet',
+      name: 'The First Whisper',
+      description: 'Discover your first exoplanet candidate',
+      icon: 'media/achievement_icon.png'
+    },
+    cosmicStillness: {
+      id: 'cosmicStillness',
+      name: 'Cosmic Stillness',
+      description: 'Ты ничего не делал 5 минут. Космос оценил твоё спокойствие.',
+      icon: 'media/achievement_icon.png'
+    },
+    edgeOfUniverse: {
+      id: 'edgeOfUniverse',
+      name: 'Edge of the Universe',
+      description: 'Дочитал до конца. Не каждый исследователь доходит так далеко.',
+      icon: 'media/achievement_icon.png'
+    },
+    almostGod: {
+      id: 'almostGod',
+      name: 'Almost a God Model',
+      description: '98%. Твоё предсказание заставило Kepler встать и аплодировать.',
+      icon: 'media/achievement_icon.png'
+    },
+    emptySkies: {
+      id: 'emptySkies',
+      name: 'Empty Skies',
+      description: 'Пять попыток — и всё мимо. Не грусти: даже космос иногда молчит.',
+      icon: 'media/achievement_icon.png'
+    }
+  };
   
-  if (achievementUnlocked) {
-    achievementStatus.classList.add('completed');
-    achievementText.textContent = 'All achievements unlocked!';
+  // Load unlocked achievements from localStorage
+  let unlockedAchievements = JSON.parse(localStorage.getItem('unlockedAchievements') || '[]');
+  
+  // Activity tracking
+  let lastActivityTime = Date.now();
+  let inactivityTimer = null;
+  let lowPredictionCount = 0;
+  
+function updateAchievementStatus() {
+    const remaining = Object.keys(achievements).length - unlockedAchievements.length;
+    if (remaining === 0) {
+      achievementStatus.classList.add('completed');
+      achievementText.innerHTML = 'All achievements unlocked!';
+    } else {
+      achievementStatus.classList.remove('completed');
+      achievementCount.textContent = remaining;
+      achievementText.innerHTML = `<span id="achievementCount">${remaining}</span> hidden achievements remaining`;
+    }
   }
   
-  function unlockAchievement() {
-    if (achievementUnlocked) return;
+  function unlockAchievement(achievementId) {
+    if (unlockedAchievements.includes(achievementId)) return;
     
-    achievementUnlocked = true;
-    localStorage.setItem('firstPlanetAchievement', 'true');
+    const achievement = achievements[achievementId];
+    if (!achievement) return;
+    
+    unlockedAchievements.push(achievementId);
+    localStorage.setItem('unlockedAchievements', JSON.stringify(unlockedAchievements));
     
     // Update status
-    achievementStatus.classList.add('completed');
-    achievementText.textContent = 'All achievements unlocked!';
+    updateAchievementStatus();
+    
+    // Update notification content
+    document.querySelector('.achievement-name').textContent = achievement.name;
+    document.querySelector('.achievement-description').textContent = achievement.description;
+    document.querySelector('.achievement-image').src = achievement.icon;
     
     // Play sound
     achievementSound.currentTime = 0;
@@ -263,6 +317,27 @@ window.addEventListener('load', async function () {
       achievementNotification.classList.remove('show');
     }, 5000);
   }
+  
+  // Initialize achievement status
+  updateAchievementStatus();
+  
+  // Track user activity for Cosmic Stillness achievement
+  function resetInactivityTimer() {
+    lastActivityTime = Date.now();
+    clearTimeout(inactivityTimer);
+    
+    inactivityTimer = setTimeout(() => {
+      unlockAchievement('cosmicStillness');
+    }, 5 * 60 * 1000); // 5 minutes
+  }
+  
+  // Add activity listeners
+  ['mousemove', 'keydown', 'scroll', 'click'].forEach(eventType => {
+    document.addEventListener(eventType, resetInactivityTimer);
+  });
+  
+  // Start inactivity timer
+  resetInactivityTimer();
 
   function getPlanetColors(probability) {
     if (probability >= 75) {
@@ -317,9 +392,28 @@ window.addEventListener('load', async function () {
       predictionStatus.textContent = 'Real-time prediction from CNN model';
       predictionStatus.classList.remove('loading');
       
-      // Check for achievement unlock (75% or higher = likely exoplanet)
-      if (parseFloat(probability) >= 75) {
-        unlockAchievement();
+      // Check for achievements
+      const prob = parseFloat(probability);
+      
+      // First Planet achievement (75% or higher)
+      if (prob >= 75) {
+        unlockAchievement('firstPlanet');
+        lowPredictionCount = 0; // Reset low prediction counter
+      }
+      
+      // Almost a God Model achievement (98% or higher)
+      if (prob >= 98) {
+        unlockAchievement('almostGod');
+      }
+      
+      // Empty Skies achievement (5 consecutive predictions below 25%)
+      if (prob < 25) {
+        lowPredictionCount++;
+        if (lowPredictionCount >= 5) {
+          unlockAchievement('emptySkies');
+        }
+      } else if (prob >= 25) {
+        lowPredictionCount = 0; // Reset if we get a decent prediction
       }
     } catch (error) {
       predictionStatus.textContent = 'Prediction failed';
@@ -449,4 +543,20 @@ window.addEventListener('load', async function () {
   }, { threshold: 0.5 });
 
   sectionBlocks.forEach(block => observer.observe(block));
+  
+  // Edge of the Universe achievement - triggers when user scrolls to bottom of Learn More
+  const learnMoreSection = document.getElementById('learnMore');
+  const resourcesBlock = document.querySelector('.resources-block');
+  
+  if (resourcesBlock) {
+    const edgeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          unlockAchievement('edgeOfUniverse');
+        }
+      });
+    }, { threshold: 0.8 });
+    
+    edgeObserver.observe(resourcesBlock);
+  }
 });
