@@ -10,13 +10,16 @@
 <body>
   <canvas id="c"></canvas>
   <div class="content">
+
     <!-- Get Started Section -->
     <div id="get-started-section" class="section active">
       <h1>/DOE4320/</h1>
-      <div class="project-info">Project complete: Automated exoplanet detection using AI/ML on open NASA datasets. Ready for demonstration
+      <div class="project-info">
+        Project complete: Automated exoplanet detection using AI/ML on open NASA datasets. Ready for demonstration
       </div>
       <a href="#" class="btn">Get Started</a>
     </div>
+
     <!-- Choose Your Level Section -->
     <div id="level-selection-section" class="section">
       <div class="level-message">New to space or a seasoned astronomer? Choose your level!</div>
@@ -25,6 +28,7 @@
         <a href="#" class="btn">I’m a Scientist</a>
       </div>
     </div>
+
     <!-- Beginner Section -->
     <div id="beginner-section" class="section">
       <div class="beginner-section">
@@ -32,7 +36,6 @@
         <label>Choose a preset:</label>
         <select class="preset-select">
           <option value="">Manual Input</option>
-          <!-- Populated dynamically -->
         </select>
         <label>Name your planet:</label>
         <input type="text" placeholder="e.g., MyAwesomePlanet b">
@@ -61,29 +64,57 @@
               <th>Description</th>
             </tr>
           </thead>
-          <tbody>
-            <!-- Populated dynamically -->
-          </tbody>
+          <tbody></tbody>
         </table>
       </div>
     </div>
+
     <!-- Scientist Section -->
     <div id="scientist-section" class="section">
-      <div class="file-message">Upload an exoplanet dataset for analysis!</div>
-      <a href="#" class="btn file-input">
-        <label for="file-upload">Select File</label>
-        <input type="file" id="file-upload" accept=".csv,.txt,.json">
-      </a>
+      <h2>Manual Input for Scientists</h2>
+      <p>Enter parameters for your candidate planet:</p>
+
+      <form id="scientist-form">
+        <label>Orbital Period (days):</label>
+        <input type="number" step="0.01" name="koi_period" required><br>
+
+        <label>Transit Duration (hours):</label>
+        <input type="number" step="0.01" name="koi_duration" required><br>
+
+        <label>Transit Depth (ppm):</label>
+        <input type="number" step="0.01" name="koi_depth" required><br>
+
+        <label>Planet Radius (Earth radii):</label>
+        <input type="number" step="0.01" name="koi_prad" required><br>
+
+        <label>Equilibrium Temperature (K):</label>
+        <input type="number" step="1" name="koi_teq" required><br>
+
+        <label>Insolation (Earth=1):</label>
+        <input type="number" step="0.01" name="koi_insol" required><br>
+
+        <label>Stellar Temperature (K):</label>
+        <input type="number" step="1" name="koi_steff" required><br>
+
+        <label>Stellar Radius (Rsun):</label>
+        <input type="number" step="0.01" name="koi_srad" required><br>
+
+        <label>Kepler Magnitude:</label>
+        <input type="number" step="0.01" name="koi_kepmag" required><br>
+
+        <button type="submit" class="btn">Predict Scientist Model</button>
+      </form>
+
+      <div id="scientist-result" style="margin-top: 1rem; font-weight: bold;"></div>
       <a href="#" class="btn back-btn">Back</a>
     </div>
-    <!-- Exoplanet Info -->
+
+    <!-- Info Section -->
     <div class="exoplanet-info">
       <h2>About Exoplanets</h2>
-      <p>Exoplanets, or extrasolar planets, are planets that orbit stars outside our Solar System. Discovered through advanced techniques like the transit method and radial velocity, over 5,000 exoplanets have been confirmed as of 2025, with thousands more candidates awaiting verification.</p>
-      <p>NASA's missions, such as Kepler and TESS, have revolutionized our understanding of these distant worlds. Our project leverages AI and machine learning to analyze NASA datasets, identifying potential exoplanets with unprecedented efficiency.</p>
-      <p>From gas giants to Earth-like rocky planets, exoplanets vary widely in size, composition, and orbit. Some lie in the habitable zone, where conditions might support liquid water, raising exciting possibilities for life beyond Earth.</p>
+      <p>Exoplanets, or extrasolar planets, are planets that orbit stars outside our Solar System...</p>
     </div>
-    <!-- Project Info (Static, at bottom) -->
+
   </div>
   <script src="assets/js/script.js"></script>
 </body>
