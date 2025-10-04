@@ -212,23 +212,20 @@ window.addEventListener('load', async function () {
     'koi_srad': 'Stellar radius (solar radii).'
   };
   const sliderRanges = {
-    'koi_period':      {min: 0.1, max: 1000,   step: 0.001, value: 0.1},
-    'koi_duration':    {min: 0.1, max: 50,     step: 0.01,  value: 0.1},
-    'koi_impact':      {min: 0,   max: 2,      step: 0.01,  value: 0},
-    'koi_depth':       {min: 0,   max: 100000, step: 1,     value: 0},
-    'koi_model_snr':   {min: 0,   max: 1000,   step: 1,     value: 0},
-    'prad_srad_ratio': {min: 0,   max: 100,    step: 0.01,  value: 0},
-    'teq_derived':     {min: 0,   max: 3000,   step: 1,     value: 0},
-    'insol':           {min: 0,   max: 1000000,step: 0.01,  value: 0},
-    'koi_steff':       {min: 2000,max: 10000,  step: 1,     value: 2000},
-    'koi_srad':        {min: 0.1, max: 10,     step: 0.01,  value: 0.1}
+    'koi_period':      {min: 0.1, max: 1000,   step: 0.001, value: 365},
+    'koi_duration':    {min: 0.1, max: 50,     step: 0.01,  value: 6},
+    'koi_impact':      {min: 0,   max: 2,      step: 0.01,  value: 0.3},
+    'koi_depth':       {min: 0,   max: 100000, step: 1,     value: 84},
+    'koi_model_snr':   {min: 0,   max: 1000,   step: 1,     value: 50},
+    'prad_srad_ratio': {min: 0,   max: 100,    step: 0.01,  value: 0.009},
+    'teq_derived':     {min: 0,   max: 3000,   step: 1,     value: 255},
+    'insol':           {min: 0,   max: 1000000,step: 0.01,  value: 1.0},
+    'koi_steff':       {min: 2000,max: 10000,  step: 1,     value: 5778},
+    'koi_srad':        {min: 0.1, max: 10,     step: 0.01,  value: 1.0}
   };
 
   // DOM
   const presetSelect = document.querySelector('.preset-select');
-  const nameInput = document.querySelector('.beginner-section input[type="text"]');
-  const predictBtn = document.querySelector('.predict-btn');
-  const predictionResult = document.querySelector('.prediction-result');
   const sliderContainers = {
     'koi_period':      document.getElementById('orbital-sliders'),
     'koi_duration':    document.getElementById('orbital-sliders'),
@@ -242,7 +239,83 @@ window.addEventListener('load', async function () {
     'koi_srad':        document.getElementById('stellar-sliders')
   };
 
-  function clearSliders() { Object.values(sliderContainers).forEach(c => c.innerHTML = ''); }
+  // Planet visualization elements
+  const percentageValue = document.querySelector('.percentage-value');
+  const predictionStatus = document.querySelector('.prediction-status');
+  const planetRing = document.querySelector('.planet-ring');
+  const gradientLight = document.querySelector('.planet-gradient-light');
+  const gradientMain = document.querySelector('.planet-gradient-main');
+  const gradientDark = document.querySelector('.planet-gradient-dark');
+
+  // Debounce timer for real-time prediction
+  let predictionTimer = null;
+
+  function getPlanetColors(probability) {
+    if (probability >= 75) {
+      return { light: '#60a5fa', main: '#3b82f6', dark: '#1e40af' };
+    }
+    if (probability >= 50) {
+      return { light: '#fb923c', main: '#f97316', dark: '#c2410c' };
+    }
+    if (probability >= 25) {
+      return { light: '#ef4444', main: '#dc2626', dark: '#991b1b' };
+    }
+    return { light: '#6b7280', main: '#4b5563', dark: '#1f2937' };
+  }
+
+  function updatePlanetVisualization(probability) {
+    const colors = getPlanetColors(probability);
+    
+    // Update gradient colors
+    gradientLight.style.stopColor = colors.light;
+    gradientMain.style.stopColor = colors.main;
+    gradientDark.style.stopColor = colors.dark;
+    
+    // Update ring progress
+    const circumference = 2 * Math.PI * 140; // 879.6
+    const progress = (probability / 100) * circumference;
+    planetRing.setAttribute('stroke-dasharray', `${progress} ${circumference}`);
+    planetRing.setAttribute('stroke', colors.main);
+    
+    // Update percentage text
+    percentageValue.textContent = `${probability}%`;
+  }
+
+  async function predictFromSliders() {
+    predictionStatus.textContent = 'Calculating...';
+    predictionStatus.classList.add('loading');
+    
+    const row = {};
+    beginnerColumns.forEach(col => {
+      const slider = document.getElementById(`slider_${col}`);
+      row[col] = parseFloat(slider.value);
+    });
+    
+    try {
+      const resp = await fetch('http://127.0.0.1:5000/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(row)
+      });
+      
+      if (!resp.ok) throw new Error();
+      const data = await resp.json();
+      const probability = (data.prob * 100).toFixed(2);
+      
+      updatePlanetVisualization(parseFloat(probability));
+      predictionStatus.textContent = 'Real-time prediction from CNN model';
+      predictionStatus.classList.remove('loading');
+    } catch (error) {
+      predictionStatus.textContent = 'Prediction failed';
+      predictionStatus.classList.remove('loading');
+      console.error('Prediction error:', error);
+    }
+  }
+
+  function clearSliders() { 
+    Object.values(sliderContainers).forEach(c => c.innerHTML = ''); 
+  }
+  
   function buildSliders(initial = null) {
     clearSliders();
     beginnerColumns.forEach(col => {
@@ -262,13 +335,26 @@ window.addEventListener('load', async function () {
       slider.value = initial?.[col] ?? r.value;
       const valueSpan = document.createElement('span'); 
       valueSpan.textContent = slider.value;
-      slider.addEventListener('input', () => valueSpan.textContent = slider.value);
+      
+      slider.addEventListener('input', () => {
+        valueSpan.textContent = slider.value;
+        
+        // Debounced prediction
+        clearTimeout(predictionTimer);
+        predictionTimer = setTimeout(() => {
+          predictFromSliders();
+        }, 500);
+      });
+      
       sliderWrapper.appendChild(slider); 
       sliderWrapper.appendChild(valueSpan);
       wrap.appendChild(label); 
       wrap.appendChild(sliderWrapper);
       sliderContainers[col].appendChild(wrap);
     });
+    
+    // Initial prediction
+    setTimeout(() => predictFromSliders(), 100);
   }
 
   // fetch presets
@@ -291,35 +377,13 @@ window.addEventListener('load', async function () {
     presetSelect.onchange = () => {
       const idx = presetSelect.value;
       if (idx === '') { 
-        nameInput.value = ''; 
         buildSliders(); 
       } else {
         const preset = presets[idx];
-        nameInput.value = preset.kepler_name || '';
         buildSliders(preset);
       }
     };
     showSection('beginner');
-  });
-
-  predictBtn.addEventListener('click', async (e) => {
-    e.preventDefault();
-    predictionResult.style.display = 'block'; 
-    predictionResult.textContent = 'Predicting...';
-    const row = {}; 
-    beginnerColumns.forEach(col => row[col] = parseFloat(document.getElementById(`slider_${col}`).value));
-    try {
-      const resp = await fetch('http://127.0.0.1:5000/predict', {
-        method:'POST', 
-        headers:{'Content-Type':'application/json'}, 
-        body: JSON.stringify(row)
-      });
-      if (!resp.ok) throw new Error();
-      const data = await resp.json();
-      predictionResult.textContent = `Your planet has a ${(data.prob*100).toFixed(2)}% chance of being an exoplanet candidate.`;
-    } catch { 
-      predictionResult.textContent = 'Prediction failed.'; 
-    }
   });
 
   /* ========= SCIENTIST ========= */

@@ -93,29 +93,73 @@
     </section>
 
     <section id="beginner-section" class="section beginner-section">
-      <h2>Create Your Exoplanet! Use sliders or choose a preset!</h2>
-      <label for="preset-select">Choose a preset:</label>
-      <select class="preset-select" id="preset-select">
-        <option value="">Manual Input</option>
-      </select>
-      <label for="planet-name">Name your planet:</label>
-      <input type="text" id="planet-name" placeholder="Enter planet name">
-      <div class="parameter-group" id="orbital-sliders">
-        <h3>Orbital Characteristics</h3>
-      </div>
-      <div class="parameter-group" id="transit-sliders">
-        <h3>Transit Characteristics</h3>
-      </div>
-      <div class="parameter-group" id="planet-sliders">
-        <h3>Planet Environment</h3>
-      </div>
-      <div class="parameter-group" id="stellar-sliders">
-        <h3>Stellar Properties</h3>
-      </div>
-      <a href="#" class="predict-btn">Predict</a>
-      <div class="prediction-result"></div>
-    </section>
+      <div class="beginner-container">
+        <!-- Left side: Controls -->
+        <div class="beginner-controls">
+          <h2>Create Your Exoplanet!</h2>
+          
+          <div class="preset-selector">
+            <label for="preset-select">Choose a preset:</label>
+            <select class="preset-select" id="preset-select">
+              <option value="">Manual Input</option>
+            </select>
+          </div>
 
+          <div class="parameter-group" id="orbital-sliders">
+            <h3>Orbital Characteristics</h3>
+          </div>
+          <div class="parameter-group" id="transit-sliders">
+            <h3>Transit Characteristics</h3>
+          </div>
+          <div class="parameter-group" id="planet-sliders">
+            <h3>Planet Environment</h3>
+          </div>
+          <div class="parameter-group" id="stellar-sliders">
+            <h3>Stellar Properties</h3>
+          </div>
+        </div>
+
+        <!-- Right side: Planet visualization -->
+        <div class="planet-visualization">
+          <div class="planet-container">
+            <svg class="planet-svg" width="320" height="320" viewBox="0 0 320 320">
+              <defs>
+                <radialGradient id="planetGradient" cx="40%" cy="40%">
+                  <stop offset="0%" class="planet-gradient-light" />
+                  <stop offset="70%" class="planet-gradient-main" />
+                  <stop offset="100%" class="planet-gradient-dark" />
+                </radialGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <circle cx="160" cy="160" r="140" fill="url(#planetGradient)" filter="url(#glow)" class="planet-core"/>
+              <circle cx="160" cy="160" r="140" stroke="#4b5563" stroke-width="6" fill="none" 
+                      stroke-dasharray="0 879.6" stroke-linecap="round" class="planet-ring"/>
+            </svg>
+            <div class="planet-percentage">
+              <span class="percentage-value">--</span>
+            </div>
+          </div>
+          
+          <div class="prediction-info">
+            <div class="prediction-label">Probability of being</div>
+            <div class="prediction-title">an Exoplanet Candidate</div>
+            <div class="prediction-status">Adjust parameters to predict</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info section -->
+      <div class="model-info">
+        <h3>About This Model</h3>
+        <p>This calculator uses a Convolutional Neural Network (CNN) trained on NASA's Kepler Objects of Interest (KOI) dataset. The model analyzes 10 key parameters including orbital characteristics, transit properties, and stellar features to predict the probability that a celestial object is an exoplanet candidate. Predictions update in real-time as you adjust the parameters.</p>
+      </div>
+    </section>
     <section id="scientist-section" class="section content">
       <h2>Manual Input for Scientists</h2>
       <p>Enter parameters for your candidate planet:</p>
