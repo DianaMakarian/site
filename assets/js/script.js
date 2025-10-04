@@ -108,7 +108,7 @@ window.addEventListener('load', async function () {
   function resetAnimations(sectionId) {
     const section = sections[sectionId];
     if (!section) return;
-    const animatable = section.querySelectorAll('h1, .btn, .level-message, .level-buttons, .exoplanet-info');
+    const animatable = section.querySelectorAll('h1, .btn, .level-message, .level-buttons, .exoplanet-info, .intro-text');
     animatable.forEach(el => {
       el.classList.remove('absorb', 'slide-out');
       el.style.opacity = '0';
@@ -116,7 +116,7 @@ window.addEventListener('load', async function () {
       el.style.animation = 'none';
       el.offsetHeight; // reflow
       el.style.animation = '';
-      el.style.animation = 'floatInFromTop 1.5s ease-out forwards';
+      el.style.animation = 'floatInFromTop 0.5s ease-out forwards'; // Reduced duration
     });
     // Special handling for exoplanet-info in learnMore section
     if (sectionId === 'learnMore') {
@@ -145,7 +145,8 @@ window.addEventListener('load', async function () {
   function showSection(sectionId, pushState = true) {
     hideAll();
     sections[sectionId].style.display = 'block';
-    setTimeout(() => { sections[sectionId].classList.add('active'); resetAnimations(sectionId); }, 10);
+    sections[sectionId].classList.add('active');
+    resetAnimations(sectionId);
     if (pushState) history.pushState({ section: sectionId }, '', `#${sectionId}`);
   }
 
@@ -163,7 +164,8 @@ window.addEventListener('load', async function () {
     const sectionId = e.state?.section || 'getStarted';
     hideAll();
     sections[sectionId].style.display = 'block';
-    setTimeout(() => { sections[sectionId].classList.add('active'); resetAnimations(sectionId); }, 10);
+    sections[sectionId].classList.add('active');
+    resetAnimations(sectionId);
   });
 
   // init
@@ -179,7 +181,7 @@ window.addEventListener('load', async function () {
     const h1 = document.querySelector('#get-started-section h1');
     getStartedBtn.classList.add('slide-out');
     h1.classList.add('absorb');
-    setTimeout(() => showSection('levelSelection'), 1200);
+    showSection('levelSelection');
   });
 
   // Beginner / Scientist buttons
