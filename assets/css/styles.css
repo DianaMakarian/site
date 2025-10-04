@@ -216,6 +216,61 @@ h1 {
   font-weight: 400;
 }
 
+/* Стили для контейнера кнопок выбора уровня */
+.level-buttons {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+/* Стили для контейнера блоков информации о уровнях */
+.level-info-container {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  max-width: 1000px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.level-info {
+  flex: 1;
+  min-width: 300px;
+  background: rgb(15, 15, 30, 0.7);
+  padding: 1.5rem;
+  border-radius: 10px;
+  text-align: left;
+  opacity: 0;
+  animation: floatInFromTop 0.5s ease-out forwards;
+}
+
+.level-info h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 8px rgb(255, 255, 255, 0.3);
+}
+
+.level-info p {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-weight: 400;
+}
+
+.level-info ul {
+  list-style-type: disc;
+  margin: 0.5rem 0 1rem 2rem;
+}
+
+.level-info ul li {
+  font-size: 1rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
 /* Стили для блока с информацией о проекте */
 .project-info {
   position: fixed;
@@ -525,6 +580,17 @@ h1 {
   .exoplanet-info p { font-size: 0.9rem; }
   .exoplanet-info ul li { font-size: 0.9rem; }
   .level-buttons { flex-direction: column; gap: 1rem; }
+  .level-info-container { 
+    flex-direction: column; 
+    gap: 1rem; 
+  }
+  .level-info { 
+    min-width: 100%; 
+    padding: 1rem; 
+  }
+  .level-info h3 { font-size: 1.2rem; }
+  .level-info p { font-size: 0.9rem; }
+  .level-info ul li { font-size: 0.9rem; }
   .beginner-section { width: 95%; padding: 1rem; }
   .beginner-section input[type="text"], 
   .beginner-section select.preset-select { 
