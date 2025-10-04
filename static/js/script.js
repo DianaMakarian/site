@@ -399,6 +399,12 @@ function updateAchievementStatus() {
       if (prob >= 75) {
         unlockAchievement('firstPlanet');
         lowPredictionCount = 0; // Reset low prediction counter
+        
+        // Show save planet section
+        document.getElementById('savePlanetSection').style.display = 'block';
+      } else {
+        // Hide save planet section if probability drops below 75%
+        document.getElementById('savePlanetSection').style.display = 'none';
       }
       
       // Almost a God Model achievement (98% or higher)
@@ -422,6 +428,67 @@ function updateAchievementStatus() {
     }
   }
 
+  // Save Planet functionality
+  const savePlanetBtn = document.getElementById('savePlanetBtn');
+  const planetNameInput = document.getElementById('planetName');
+  const saveMessage = document.getElementById('saveMessage');
+  
+  if (savePlanetBtn) {
+    savePlanetBtn.addEventListener('click', async () => {
+      const planetName = planetNameInput.value.trim();
+      
+      if (!planetName) {
+        saveMessage.textContent = 'Please enter a planet name';
+        saveMessage.className = 'save-message error';
+        return;
+      }
+      
+      // Get current slider values
+      const planetData = {
+        planet_name: planetName
+      };
+      
+      beginnerColumns.forEach(col => {
+        const slider = document.getElementById(`slider_${col}`);
+        if (slider) {
+          planetData[col] = parseFloat(slider.value);
+        }
+      });
+      
+      // Disable button during save
+      savePlanetBtn.disabled = true;
+      saveMessage.textContent = 'Saving...';
+      saveMessage.className = 'save-message';
+      
+      try {
+        const resp = await fetch('http://127.0.0.1:5000/save_planet', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(planetData)
+        });
+        
+        if (!resp.ok) throw new Error();
+        
+        const data = await resp.json();
+        saveMessage.textContent = `✓ ${data.message}`;
+        saveMessage.className = 'save-message success';
+        planetNameInput.value = '';
+        
+        // Re-enable button after 2 seconds
+        setTimeout(() => {
+          savePlanetBtn.disabled = false;
+          saveMessage.textContent = '';
+        }, 2000);
+        
+      } catch (error) {
+        saveMessage.textContent = '✗ Failed to save planet';
+        saveMessage.className = 'save-message error';
+        savePlanetBtn.disabled = false;
+        console.error('Save error:', error);
+      }
+    });
+  }
+  
   function clearSliders() { 
     Object.values(sliderContainers).forEach(c => c.innerHTML = ''); 
   }

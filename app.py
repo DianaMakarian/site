@@ -154,5 +154,42 @@ def predict_scientist():
     label = "CONFIRMED" if pred == 1 else "CANDIDATE"
     return jsonify({"prediction": label})
 
+@app.route("/save_planet", methods=["POST"])
+def save_planet():
+    data_in = request.json
+    planet_name = data_in.get("planet_name", "Unknown")
+    
+    # Create row matching KOI dataset structure
+    new_row = {
+        "kepler_name": planet_name,
+        "koi_pdisposition": "CANDIDATE",
+        "koi_period": data_in.get("koi_period"),
+        "koi_duration": data_in.get("koi_duration"),
+        "koi_impact": data_in.get("koi_impact"),
+        "koi_depth": data_in.get("koi_depth"),
+        "koi_model_snr": data_in.get("koi_model_snr"),
+        "koi_steff": data_in.get("koi_steff"),
+        "koi_srad": data_in.get("koi_srad"),
+        "prad_srad_ratio": data_in.get("prad_srad_ratio"),
+        "teq_derived": data_in.get("teq_derived"),
+        "insol": data_in.get("insol")
+    }
+    
+    # Save to CSV
+    try:
+        # Try to read existing saved planets
+        try:
+            saved_df = pd.read_csv("data/saved_planets.csv")
+        except FileNotFoundError:
+            saved_df = pd.DataFrame()
+        
+        # Append new planet
+        saved_df = pd.concat([saved_df, pd.DataFrame([new_row])], ignore_index=True)
+        saved_df.to_csv("data/saved_planets.csv", index=False)
+        
+        return jsonify({"message": f"Planet '{planet_name}' saved successfully!", "status": "success"})
+    except Exception as e:
+        return jsonify({"message": "Failed to save planet", "error": str(e), "status": "error"}), 500
+    
 if __name__ == "__main__":
     app.run(debug=True)

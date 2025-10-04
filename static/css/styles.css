@@ -1203,3 +1203,80 @@ font-size: 2rem;
     filter: grayscale(0%) drop-shadow(0 0 8px #ffd700);
   }
 }
+
+/* Save Planet Section */
+.save-planet-section {
+  background: rgba(15, 15, 30, 0.8);
+  border: 2px solid rgba(107, 114, 142, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+  max-width: 320px;
+  text-align: center;
+}
+
+.planet-name-input {
+  width: 100%;
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(107, 114, 142, 0.4);
+  border-radius: 8px;
+  background: #2d3748;
+  color: #ffffff;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.95rem;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.2);
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.planet-name-input:focus {
+  outline: none;
+  border-color: #6b728e;
+}
+
+.planet-name-input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.save-planet-btn {
+  width: 100%;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  border: solid 2px #ffffff1a;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: inset 1px 3px 1px #ffffff66;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
+      #10b981 calc(var(--r) - 1px), #059669 var(--r)) border-box;
+  font-family: 'Fira Code', monospace;
+  transition: --r 0.35s ease, transform 0.3s ease;
+}
+
+.save-planet-btn:hover {
+  --r: 100%;
+  transform: translateY(-2px);
+}
+
+.save-planet-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.save-message {
+  margin-top: 1rem;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  min-height: 1.5rem;
+}
+
+.save-message.success {
+  color: #10b981;
+}
+
+.save-message.error {
+  color: #ef4444;
+}
