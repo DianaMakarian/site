@@ -7,7 +7,7 @@ import torch.nn as nn
 from sklearn.preprocessing import MinMaxScaler
 import joblib
 import io
-ывпвар
+
 app = Flask(__name__)
 CORS(app)
 
