@@ -96,7 +96,7 @@ cnn_model.load_state_dict(torch.load("models/best_model.pth", map_location=devic
 cnn_model.eval()
 
 # === Завантаження нової двоступінчатої моделі (для науковців) ===
-scientist_model = joblib.load("models/stacking_model.pkl")
+scientist_model = joblib.load("models/smodel.pkl")
 
 # Перевіряємо тип моделі
 if isinstance(scientist_model, dict):
