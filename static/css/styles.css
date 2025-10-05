@@ -402,7 +402,7 @@ ease-out 0.3s;
 .level-info {
   flex: 1;
   max-width: 650px;
-  min-width: 450px;
+  min-width: 50px;
   background: rgb(15, 15, 30, 0.8);
   padding: 2rem;
   border-radius: 10px;
