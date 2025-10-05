@@ -378,7 +378,7 @@ function updateAchievementStatus() {
     });
     
     try {
-      const resp = await fetch('http://127.0.0.1:5000/predict', {
+      const resp = await fetch('/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(row)
@@ -461,7 +461,7 @@ function updateAchievementStatus() {
       saveMessage.className = 'save-message';
       
       try {
-        const resp = await fetch('http://127.0.0.1:5000/save_planet', {
+        const resp = await fetch('/save_planet', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(planetData)
@@ -551,7 +551,7 @@ function updateAchievementStatus() {
 
   let presets = [];
   try {
-    const resp = await fetch('http://127.0.0.1:5000/presets');
+    const resp = await fetch('/presets');
     if (resp.ok) presets = await resp.json();
   } catch (e) { console.error("Presets fetch fail", e); }
 
@@ -670,7 +670,7 @@ function updateAchievementStatus() {
     scientistResult.innerHTML = '<div class="result-loading">Analyzing...</div>';
 
     try {
-      const resp = await fetch('http://127.0.0.1:5000/predict_scientist', {
+      const resp = await fetch('/predict_scientist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
