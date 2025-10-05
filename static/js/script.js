@@ -418,7 +418,7 @@ function updateAchievementStatus() {
       const prob = parseFloat(probability);
       
       // First Planet achievement (75% or higher)
-      if (prob >= 75) {
+      if (prob >= 10) {
         unlockAchievement('firstPlanet');
         lowPredictionCount = 0; // Reset low prediction counter
         
@@ -671,7 +671,7 @@ function updateAchievementStatus() {
   const predictScientistBtn = document.getElementById('predictScientistBtn');
   const scientistResult = document.getElementById('scientistResult');
   
-  predictScientistBtn.addEventListener('click', async () => {
+predictScientistBtn.addEventListener('click', async () => {
     const payload = {};
     let hasEmptyFields = false;
 
@@ -703,9 +703,29 @@ function updateAchievementStatus() {
       const data = await resp.json();
       const isConfirmed = data.prediction === 'CONFIRMED';
       const resultClass = isConfirmed ? 'result-confirmed' : 'result-candidate';
-      const icon = isConfirmed ? '✓' : '⚠';
+      const icon = isConfirmed ? '' : '';
       
-      scientistResult.innerHTML = `<div class="${resultClass}">${icon} ${data.prediction}</div>`;
+      const probFP = (data.probabilities.FALSE_POSITIVE * 100).toFixed(2);
+      const probCand = (data.probabilities.CANDIDATE * 100).toFixed(2);
+      const probConf = (data.probabilities.CONFIRMED * 100).toFixed(2);
+      
+      scientistResult.innerHTML = `
+        <div class="${resultClass}">${icon} ${data.prediction}</div>
+        <div class="probability-breakdown">
+          <div class="prob-item">
+            <span class="prob-label">False Positive:</span>
+            <span class="prob-value">${probFP}%</span>
+          </div>
+          <div class="prob-item">
+            <span class="prob-label">Candidate:</span>
+            <span class="prob-value">${probCand}%</span>
+          </div>
+          <div class="prob-item">
+            <span class="prob-label">Confirmed:</span>
+            <span class="prob-value">${probConf}%</span>
+          </div>
+        </div>
+      `;
       
     } catch (error) {
       scientistResult.innerHTML = '<div class="result-placeholder" style="color: #ef4444;">Prediction failed</div>';
