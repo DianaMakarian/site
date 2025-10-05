@@ -457,7 +457,7 @@ function updateAchievementStatus() {
       
       // Disable button during save
       savePlanetBtn.disabled = true;
-      saveMessage.textContent = 'Saving...';
+      saveMessage.textContent = 'Generating CSV...';
       saveMessage.className = 'save-message';
       
       try {
@@ -467,9 +467,26 @@ function updateAchievementStatus() {
           body: JSON.stringify(planetData)
         });
         
-        if (!resp.ok) throw new Error();
+        if (!resp.ok) throw new Error('Server error');
         
         const data = await resp.json();
+        
+        // Create download link
+        const blob = new Blob([data.csv_data], { type: 'text/csv;charset=utf-8;' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = data.filename;
+        document.body.appendChild(a);
+        a.click();
+        
+        // Cleanup
+        setTimeout(() => {
+          window.URL.revokeObjectURL(url);
+          document.body.removeChild(a);
+        }, 100);
+        
         saveMessage.textContent = `✓ ${data.message}`;
         saveMessage.className = 'save-message success';
         planetNameInput.value = '';
@@ -561,34 +578,118 @@ function updateAchievementStatus() {
   });
 
   /* ========= SCIENTIST ========= */
+  const scientistFieldIds = {
+    'koi_period': 'sci_koi_period',
+    'koi_duration': 'sci_koi_duration',
+    'koi_depth': 'sci_koi_depth',
+    'koi_prad': 'sci_koi_prad',
+    'koi_teq': 'sci_koi_teq',
+    'koi_insol': 'sci_koi_insol',
+    'koi_steff': 'sci_koi_steff',
+    'koi_srad': 'sci_koi_srad',
+    'koi_kepmag': 'sci_koi_kepmag'
+  };
+
   scientistBtn.addEventListener('click', (e) => { 
     e.preventDefault(); 
     showSection('scientist'); 
   });
-  const scientistForm = document.getElementById('scientist-form');
-  const scientistResult = document.getElementById('scientist-result');
-  if (scientistForm) {
-    scientistForm.addEventListener('submit', async (e) => {
-      e.preventDefault(); 
-      scientistResult.textContent = 'Predicting...';
-      const formData = new FormData(scientistForm); 
-      const payload={}; 
-      formData.forEach((v,k)=>payload[k]=parseFloat(v));
+
+  // Load Data Button
+  const loadDataBtn = document.getElementById('loadDataBtn');
+  const loadDataFile = document.getElementById('loadDataFile');
+  
+  loadDataBtn.addEventListener('click', () => {
+    loadDataFile.click();
+  });
+
+  loadDataFile.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
       try {
-        const resp = await fetch('http://127.0.0.1:5000/predict_scientist', {
-          method:'POST', 
-          headers:{'Content-Type':'application/json'}, 
-          body: JSON.stringify(payload)
+        const text = event.target.result;
+        const lines = text.split('\n');
+        
+        if (lines.length < 2) {
+          alert('Invalid CSV file');
+          return;
+        }
+
+        // Parse CSV header and first data row
+        const headers = lines[0].split(',').map(h => h.trim());
+        const values = lines[1].split(',').map(v => v.trim());
+        
+        // Map CSV columns to form fields
+        Object.keys(scientistFieldIds).forEach(key => {
+          const colIndex = headers.indexOf(key);
+          if (colIndex !== -1 && values[colIndex]) {
+            const field = document.getElementById(scientistFieldIds[key]);
+            if (field) {
+              field.value = values[colIndex];
+            }
+          }
         });
-        if (!resp.ok) throw new Error();
-        const data = await resp.json();
-        scientistResult.textContent = `Prediction: ${data.prediction}`;
-      } catch { 
-        scientistResult.textContent = 'Prediction failed.'; 
+
+        const resultDisplay = document.getElementById('scientistResult');
+        resultDisplay.innerHTML = '<div class="result-placeholder">Data loaded! Click Predict to analyze.</div>';
+        
+      } catch (error) {
+        alert('Error reading CSV file');
+        console.error('CSV parse error:', error);
+      }
+    };
+    
+    reader.readAsText(file);
+  });
+
+  // Predict Button
+  const predictScientistBtn = document.getElementById('predictScientistBtn');
+  const scientistResult = document.getElementById('scientistResult');
+  
+  predictScientistBtn.addEventListener('click', async () => {
+    const payload = {};
+    let hasEmptyFields = false;
+
+    Object.keys(scientistFieldIds).forEach(key => {
+      const field = document.getElementById(scientistFieldIds[key]);
+      if (field && field.value) {
+        payload[key] = parseFloat(field.value);
+      } else {
+        hasEmptyFields = true;
       }
     });
-  }
 
+    if (hasEmptyFields) {
+      scientistResult.innerHTML = '<div class="result-placeholder" style="color: #ef4444;">Please fill all fields</div>';
+      return;
+    }
+
+    scientistResult.innerHTML = '<div class="result-loading">Analyzing...</div>';
+
+    try {
+      const resp = await fetch('http://127.0.0.1:5000/predict_scientist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (!resp.ok) throw new Error();
+      
+      const data = await resp.json();
+      const isConfirmed = data.prediction === 'CONFIRMED';
+      const resultClass = isConfirmed ? 'result-confirmed' : 'result-candidate';
+      const icon = isConfirmed ? '✓' : '⚠';
+      
+      scientistResult.innerHTML = `<div class="${resultClass}">${icon} ${data.prediction}</div>`;
+      
+    } catch (error) {
+      scientistResult.innerHTML = '<div class="result-placeholder" style="color: #ef4444;">Prediction failed</div>';
+      console.error('Prediction error:', error);
+    }
+  });
   /* ========= SCROLL OBSERVER FOR SECTION BLOCKS ========= */
   const sectionBlocks = document.querySelectorAll('.section-block');
   const observer = new IntersectionObserver((entries) => {

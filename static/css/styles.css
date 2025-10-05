@@ -1280,3 +1280,207 @@ font-size: 2rem;
 .save-message.error {
   color: #ef4444;
 }
+
+/* Scientist Section */
+.scientist-section {
+  width: 90%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: transparent;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.scientist-container {
+  display: flex;
+  gap: 3rem;
+  width: 100%;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.scientist-controls {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.scientist-section h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 10px rgb(255, 255, 255, 0.3);
+  text-align: left;
+}
+
+.input-field {
+  margin-bottom: 1.5rem;
+}
+
+.input-field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+.input-field input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ffffff1a;
+  border-radius: 8px;
+  background: #2d3748;
+  color: #ffffff;
+  font-family: 'Fira Code', monospace;
+  font-size: 1rem;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.2);
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.input-field input:focus {
+  outline: none;
+  border-color: #6b728e;
+}
+
+.scientist-sidebar {
+  position: sticky;
+  top: 8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 380px;
+  max-width: 380px;
+  gap: 1.5rem;
+  align-self: flex-start;
+  flex-shrink: 0;
+  height: fit-content;
+}
+
+.scientist-actions {
+  width: 100%;
+  background: rgba(15, 15, 30, 0.8);
+  border: 2px solid rgba(107, 114, 142, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.scientist-actions h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #bfdbfe;
+  font-family: 'Fira Code', monospace;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 0.9rem 1.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #ffffff;
+  border: solid 2px #ffffff1a;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: inset 1px 3px 1px #ffffff66;
+  font-family: 'Fira Code', monospace;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.load-btn {
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
+      #3b82f6 calc(var(--r) - 1px), #1e40af var(--r)) border-box;
+}
+
+.load-btn:hover {
+  --r: 100%;
+  transform: translateY(-2px);
+}
+
+.predict-btn {
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), 
+      #6b728e calc(var(--r) - 1px), #4b5563 var(--r)) border-box;
+}
+
+.predict-btn:hover {
+  --r: 100%;
+  transform: translateY(-2px);
+}
+
+.scientist-result-panel {
+  width: 100%;
+  background: rgba(15, 15, 30, 0.8);
+  border: 2px solid rgba(107, 114, 142, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.scientist-result-panel h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #bfdbfe;
+  font-family: 'Fira Code', monospace;
+}
+
+.result-display {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a202c;
+  border-radius: 8px;
+  padding: 1.5rem;
+  font-family: 'Fira Code', monospace;
+}
+
+.result-placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.result-confirmed {
+  color: #10b981;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.result-candidate {
+  color: #f59e0b;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.result-loading {
+  color: #60a5fa;
+  font-size: 1.1rem;
+  animation: pulse 1.5s infinite;
+}
+
+/* Responsive for Scientist */
+@media (max-width: 768px) {
+  .scientist-container {
+    flex-direction: column;
+  }
+  
+  .scientist-sidebar {
+    position: relative;
+    top: 0;
+    width: 100%;
+    max-width: 100%;
+    order: -1;
+  }
+}

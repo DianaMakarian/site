@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 from sklearn.preprocessing import MinMaxScaler
 import joblib
+import io
 
 app = Flask(__name__)
 CORS(app)
@@ -159,37 +160,37 @@ def save_planet():
     data_in = request.json
     planet_name = data_in.get("planet_name", "Unknown")
     
-    # Create row matching KOI dataset structure
+    # Create row with only necessary columns for scientist model
     new_row = {
         "kepler_name": planet_name,
-        "koi_pdisposition": "CANDIDATE",
         "koi_period": data_in.get("koi_period"),
         "koi_duration": data_in.get("koi_duration"),
-        "koi_impact": data_in.get("koi_impact"),
         "koi_depth": data_in.get("koi_depth"),
-        "koi_model_snr": data_in.get("koi_model_snr"),
+        "koi_prad": data_in.get("prad_srad_ratio", 0) * data_in.get("koi_srad", 1) * (R_sun / R_earth),
+        "koi_teq": data_in.get("teq_derived"),
+        "koi_insol": data_in.get("insol"),
         "koi_steff": data_in.get("koi_steff"),
         "koi_srad": data_in.get("koi_srad"),
-        "prad_srad_ratio": data_in.get("prad_srad_ratio"),
-        "teq_derived": data_in.get("teq_derived"),
-        "insol": data_in.get("insol")
+        "koi_kepmag": 15.0
     }
     
-    # Save to CSV
-    try:
-        # Try to read existing saved planets
-        try:
-            saved_df = pd.read_csv("data/saved_planets.csv")
-        except FileNotFoundError:
-            saved_df = pd.DataFrame()
-        
-        # Append new planet
-        saved_df = pd.concat([saved_df, pd.DataFrame([new_row])], ignore_index=True)
-        saved_df.to_csv("data/saved_planets.csv", index=False)
-        
-        return jsonify({"message": f"Planet '{planet_name}' saved successfully!", "status": "success"})
-    except Exception as e:
-        return jsonify({"message": "Failed to save planet", "error": str(e), "status": "error"}), 500
+    # Generate CSV content
+    df_new = pd.DataFrame([new_row])
+    csv_buffer = io.StringIO()
+    df_new.to_csv(csv_buffer, index=False)
+    csv_content = csv_buffer.getvalue()
+    
+    # Clean filename
+    safe_filename = "".join(c for c in planet_name if c.isalnum() or c in (' ', '-', '_')).strip()
+    if not safe_filename:
+        safe_filename = "planet"
+    
+    return jsonify({
+        "message": f"Planet '{planet_name}' ready for download!",
+        "status": "success",
+        "csv_data": csv_content,
+        "filename": f"{safe_filename}.csv"
+    })
     
 if __name__ == "__main__":
     app.run(debug=True)

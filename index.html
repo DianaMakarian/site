@@ -192,31 +192,81 @@
       <source src="media/achievement_sound.ogg" type="audio/ogg">
     </audio>
 
-    <section id="scientist-section" class="section content">
-      <h2>Manual Input for Scientists</h2>
-      <p>Enter parameters for your candidate planet:</p>
-      <form id="scientist-form">
-        <label>Orbital Period (days):</label>
-        <input type="number" name="koi_period" step="any" required>
-        <label>Transit Duration (hours):</label>
-        <input type="number" name="koi_duration" step="any" required>
-        <label>Transit Depth (ppm):</label>
-        <input type="number" name="koi_depth" step="any" required>
-        <label>Planet Radius (Earth radii):</label>
-        <input type="number" name="koi_prad" step="any" required>
-        <label>Equilibrium Temperature (K):</label>
-        <input type="number" name="koi_teq" step="any" required>
-        <label>Insolation (Earth=1):</label>
-        <input type="number" name="koi_insol" step="any" required>
-        <label>Stellar Temperature (K):</label>
-        <input type="number" name="koi_steff" step="any" required>
-        <label>Stellar Radius (Rsun):</label>
-        <input type="number" name="koi_srad" step="any" required>
-        <label>Kepler Magnitude:</label>
-        <input type="number" name="koi_kepmag" step="any" required>
-        <button type="submit" class="predict-btn">Predict Scientist Model</button>
-      </form>
-      <div id="scientist-result"></div>
+<section id="scientist-section" class="section scientist-section">
+      <div class="scientist-container">
+        <div class="scientist-controls">
+          <h2>Advanced Prediction</h2>
+          
+          <div class="parameter-group">
+            <h3>Orbital & Transit Parameters</h3>
+            <div class="input-field">
+              <label>Orbital Period (days):</label>
+              <input type="number" id="sci_koi_period" step="any" placeholder="e.g., 365.25">
+            </div>
+            <div class="input-field">
+              <label>Transit Duration (hours):</label>
+              <input type="number" id="sci_koi_duration" step="any" placeholder="e.g., 6.5">
+            </div>
+            <div class="input-field">
+              <label>Transit Depth (ppm):</label>
+              <input type="number" id="sci_koi_depth" step="any" placeholder="e.g., 84">
+            </div>
+          </div>
+
+          <div class="parameter-group">
+            <h3>Planet Properties</h3>
+            <div class="input-field">
+              <label>Planet Radius (Earth radii):</label>
+              <input type="number" id="sci_koi_prad" step="any" placeholder="e.g., 1.0">
+            </div>
+            <div class="input-field">
+              <label>Equilibrium Temperature (K):</label>
+              <input type="number" id="sci_koi_teq" step="any" placeholder="e.g., 288">
+            </div>
+            <div class="input-field">
+              <label>Insolation (Earth=1):</label>
+              <input type="number" id="sci_koi_insol" step="any" placeholder="e.g., 1.0">
+            </div>
+          </div>
+
+          <div class="parameter-group">
+            <h3>Stellar Properties</h3>
+            <div class="input-field">
+              <label>Stellar Temperature (K):</label>
+              <input type="number" id="sci_koi_steff" step="any" placeholder="e.g., 5778">
+            </div>
+            <div class="input-field">
+              <label>Stellar Radius (R☉):</label>
+              <input type="number" id="sci_koi_srad" step="any" placeholder="e.g., 1.0">
+            </div>
+            <div class="input-field">
+              <label>Kepler Magnitude:</label>
+              <input type="number" id="sci_koi_kepmag" step="any" placeholder="e.g., 15.5">
+            </div>
+          </div>
+        </div>
+
+        <div class="scientist-sidebar">
+          <div class="scientist-actions">
+            <h3>Actions</h3>
+            <input type="file" id="loadDataFile" accept=".csv" style="display: none;">
+            <button id="loadDataBtn" class="action-btn load-btn">📂 Load Data</button>
+            <button id="predictScientistBtn" class="action-btn predict-btn">🔬 Predict</button>
+          </div>
+
+          <div class="scientist-result-panel">
+            <h3>Prediction Result</h3>
+            <div id="scientistResult" class="result-display">
+              <div class="result-placeholder">Configure parameters and click Predict</div>
+            </div>
+          </div>
+
+          <div class="model-info">
+            <h3>About This Model</h3>
+            <p>Advanced stacking ensemble combining multiple algorithms for high-precision classification. Trained on extended feature set including derived astrophysical quantities.</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section id="learnMore" class="section content">
