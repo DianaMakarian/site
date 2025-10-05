@@ -137,7 +137,7 @@ def get_presets():
     presets = data_phys.head(10).to_dict(orient="records")
     for i, preset in enumerate(presets):
         preset["kepler_name"] = (
-            data.iloc[i]["kepler_name"] if pd.notna(data.iloc[i]["kepler_name"]) else f"Пресет {i+1}"
+            data.iloc[i]["kepler_name"] if pd.notna(data.iloc[i]["kepler_name"]) else f"False Positive Preset {i+1}"
         )
     return jsonify(presets)
 
