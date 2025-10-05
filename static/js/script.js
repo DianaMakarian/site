@@ -288,36 +288,58 @@ function updateAchievementStatus() {
     }
   }
   
-  function unlockAchievement(achievementId) {
-    if (unlockedAchievements.includes(achievementId)) return;
-    
-    const achievement = achievements[achievementId];
-    if (!achievement) return;
-    
-    unlockedAchievements.push(achievementId);
-    localStorage.setItem('unlockedAchievements', JSON.stringify(unlockedAchievements));
-    
-    // Update status
-    updateAchievementStatus();
-    
-    // Update notification content
-    document.querySelector('.achievement-name').textContent = achievement.name;
-    document.querySelector('.achievement-description').textContent = achievement.description;
-    document.querySelector('.achievement-image').src = achievement.icon;
-    
-    // Play sound
-    achievementSound.currentTime = 0;
-    achievementSound.play().catch(e => console.log('Audio play failed:', e));
-    
-    // Show notification
-    achievementNotification.classList.add('show');
-    
-    // Hide after 5 seconds
-    setTimeout(() => {
-      achievementNotification.classList.remove('show');
-    }, 5000);
+ function unlockAchievement(achievementId) {
+  if (unlockedAchievements.includes(achievementId)) return;
+  
+  const achievement = achievements[achievementId];
+  if (!achievement) return;
+  
+  unlockedAchievements.push(achievementId);
+  localStorage.setItem('unlockedAchievements', JSON.stringify(unlockedAchievements));
+  
+  // Update status
+  updateAchievementStatus();
+  
+  // Update notification content
+  document.querySelector('.achievement-name').textContent = achievement.name;
+  document.querySelector('.achievement-description').textContent = achievement.description;
+  
+  // ← Добавьте дебаги для картинки
+  const imgElement = document.querySelector('.achievement-image');
+  if (!imgElement) {
+    console.error('❌ .achievement-image element not found!');
+    return;  // Если элемент не найден — стоп
   }
   
+  console.log('🔄 Setting icon src to:', achievement.icon);  // Что устанавливаем
+  const oldSrc = imgElement.src;
+  console.log('🔄 Old src was:', oldSrc);  // Что было раньше
+  
+  imgElement.src = achievement.icon + '?t=' + Date.now();  // ← + timestamp, чтобы обойти кэш
+  
+  imgElement.onload = function() {
+    console.log('✅ Icon loaded successfully! Size:', this.naturalWidth + 'x' + this.naturalHeight);
+  };
+  
+  imgElement.onerror = function() {
+    console.error('❌ Icon failed to load from:', achievement.icon);
+    console.log('❌ Trying fallback...');
+    this.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjRkZENzAwIi8+Cjx0ZXh0IHg9IjMyIiB5PSIzMiIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMDAwMDAwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+8J+PgTwvdGV4dD4KPC9zdmc+';  // Встроенный 🏆 (жёлтый квадрат с трофеем)
+    this.onerror = null;  // Не рекурсия
+  };
+  
+  // Play sound
+  achievementSound.currentTime = 0;
+  achievementSound.play().catch(e => console.log('Audio play failed:', e));
+  
+  // Show notification
+  achievementNotification.classList.add('show');
+  
+  // Hide after 5 seconds
+  setTimeout(() => {
+    achievementNotification.classList.remove('show');
+  }, 5000);
+}
   // Initialize achievement status
   updateAchievementStatus();
   
