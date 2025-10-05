@@ -58,7 +58,7 @@ phys_cols = ["koi_period", "koi_duration", "koi_depth",
 data_phys = data[phys_cols].copy().dropna(subset=phys_cols)
 data = data.loc[data_phys.index].copy()
 
-# клипы
+# clipping
 data_phys["koi_period"] = np.clip(data_phys["koi_period"], 0.1, np.inf)
 data_phys["koi_duration"] = np.clip(data_phys["koi_duration"], 0.1, np.inf)
 data_phys["koi_depth"] = np.clip(data_phys["koi_depth"], 0, np.inf)
@@ -86,17 +86,16 @@ features = ['koi_period', 'koi_impact', 'koi_duration', 'koi_depth',
             'koi_steff', 'koi_srad', 'insol']
 data_phys = data_phys[features]
 
-# скейлер
 scaler = MinMaxScaler()
 scaler.fit(data_phys.values)
 
-# загрузка CNN модели
+# load CNN model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 cnn_model = CNN_M3().to(device)
 cnn_model.load_state_dict(torch.load("models/best_model.pth", map_location=device))
 cnn_model.eval()
 
-# === Stacking модель (для учёного) ===
+# === Stacking модель (for scientist) ===
 stack_model = joblib.load("models/stacking_model.pkl")
 stack_features = ["koi_period","koi_duration","koi_depth",
                   "koi_prad","koi_teq","koi_insol",
@@ -193,4 +192,4 @@ def save_planet():
     })
     
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

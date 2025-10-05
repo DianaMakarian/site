@@ -713,18 +713,23 @@ function updateAchievementStatus() {
   sectionBlocks.forEach(block => observer.observe(block));
   
   // Edge of the Universe achievement - triggers when user scrolls to bottom of Learn More
-  const learnMoreSection = document.getElementById('learnMore');
+sectionBlocks.forEach(block => observer.observe(block));
+  
+  // Edge of the Universe achievement - triggers when user scrolls to bottom of Learn More
   const resourcesBlock = document.querySelector('.resources-block');
   
   if (resourcesBlock) {
     const edgeObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
+          console.log('Resources block visible - unlocking achievement');
           unlockAchievement('edgeOfUniverse');
         }
       });
-    }, { threshold: 0.8 });
+    }, { threshold: 0.3 }); // Знижено з 0.8 до 0.3 для надійності
     
     edgeObserver.observe(resourcesBlock);
+  } else {
+    console.log('Resources block not found');
   }
 });
