@@ -240,31 +240,31 @@ const achievements = {
       id: 'firstPlanet',
       name: 'The First Whisper',
       description: 'Discover your first exoplanet candidate',
-      icon: 'media/achievement_icon.png'
+      icon: '/static/media/achievement_icon.png'
     },
     cosmicStillness: {
       id: 'cosmicStillness',
       name: 'Cosmic Stillness',
       description: 'You did nothing for 5 minutes. The cosmos appreciates your serenity.',
-      icon: 'media/achievement_icon.png'
+      icon: '/static/media/achievement_icon.png'
     },
     edgeOfUniverse: {
       id: 'edgeOfUniverse',
       name: 'Edge of the Universe',
       description: 'Read to the very end. Not every researcher makes it this far.',
-      icon: 'media/achievement_icon.png'
+      icon: '/static/media/achievement_icon.png'
     },
     almostGod: {
       id: 'almostGod',
       name: 'Almost a God Model',
       description: '98%. Your prediction made Kepler stand up and applaud.',
-      icon: 'media/achievement_icon.png'
+      icon: '/static/media/achievement_icon.png'
     },
     emptySkies: {
       id: 'emptySkies',
       name: 'Empty Skies',
       description: 'Five attempts—and all misses. Don’t be sad: even the cosmos is sometimes silent.',
-      icon: 'media/achievement_icon.png'
+      icon: '/static/media/achievement_icon.png'
     }
   };
   
