@@ -1,5 +1,5 @@
 /* =========================
-   Cosmic background
+   Cosmic Background
    ========================= */
 var PARTICLE_NUM = 200;
 var PARTICLE_BASE_RADIUS = 0.5;
@@ -15,6 +15,7 @@ var speed = DEFAULT_SPEED;
 var targetSpeed = DEFAULT_SPEED;
 var particles = [];
 
+/* Update position for hover effects */
 function update_position(e) {
   const _t = e.target.closest('.btn');
   if (_t) {
@@ -25,6 +26,7 @@ function update_position(e) {
   }
 }
 
+/* Animation loop for particles */
 function loop() {
   context.save();
   context.fillStyle = 'rgba(0,0,0,0.2)';
@@ -55,6 +57,7 @@ function loop() {
   context.fill();
 }
 
+/* Randomize particle position */
 function randomizeParticle(p) {
   p.x = Math.random() * canvasWidth;
   p.y = Math.random() * canvasHeight;
@@ -62,6 +65,7 @@ function randomizeParticle(p) {
   return p;
 }
 
+/* Particle constructor */
 function Particle(x, y, z) {
   this.x = x || 0;
   this.y = y || 0;
@@ -70,7 +74,7 @@ function Particle(x, y, z) {
 }
 
 /* =========================
-   Main logic
+   Main Logic
    ========================= */
 window.addEventListener('load', async function () {
   window.scrollTo(0, 0);
@@ -418,7 +422,7 @@ function updateAchievementStatus() {
       const prob = parseFloat(probability);
       
       // First Planet achievement (75% or higher)
-      if (prob >= 10) {
+      if (prob >= 75) {
         unlockAchievement('firstPlanet');
         lowPredictionCount = 0; // Reset low prediction counter
         

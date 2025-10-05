@@ -11,7 +11,7 @@ import io
 app = Flask(__name__)
 CORS(app)
 
-# === фізичні константи ===
+# === Physical Constants ===
 G = 6.67430e-11
 M_sun = 1.98847e30
 R_sun = 6.957e8
@@ -19,7 +19,7 @@ AU = 1.496e11
 R_earth = 6.371e6
 T_sun = 5772
 
-# === CNN Модель (для новачків) ===
+# === CNN Model (Beginner Mode) ===
 class CNN_M3(nn.Module):
     def __init__(self, input_channels=1, num_features=10):
         super(CNN_M3, self).__init__()
@@ -48,17 +48,19 @@ class CNN_M3(nn.Module):
         x = self.dense(x)
         return x
 
-# === Дані для CNN ===
+# === Data Preparation for CNN ===
 df = pd.read_csv("data/KOI.csv", sep=",", skiprows=53)
+# Filter rows based on disposition
 mask = df["koi_pdisposition"].isin(["CANDIDATE", "FALSE POSITIVE"])
 data = df[mask].copy()
 
+# Select physical columns and handle missing values
 phys_cols = ["koi_period", "koi_duration", "koi_depth",
              "koi_steff", "koi_srad", "koi_impact", "koi_model_snr"]
 data_phys = data[phys_cols].copy().dropna(subset=phys_cols)
 data = data.loc[data_phys.index].copy()
 
-# обрізання значень
+# Clip values to ensure they are within reasonable ranges
 data_phys["koi_period"] = np.clip(data_phys["koi_period"], 0.1, np.inf)
 data_phys["koi_duration"] = np.clip(data_phys["koi_duration"], 0.1, np.inf)
 data_phys["koi_depth"] = np.clip(data_phys["koi_depth"], 0, np.inf)
@@ -67,7 +69,7 @@ data_phys["koi_srad"] = np.clip(data_phys["koi_srad"], 0.1, 10)
 data_phys["koi_impact"] = np.clip(data_phys["koi_impact"], 0, 2)
 data_phys["koi_model_snr"] = np.clip(data_phys["koi_model_snr"], 0, 1000)
 
-# похідні ознаки
+# Derived features
 data_phys["koi_smass"] = np.clip(data_phys["koi_srad"] ** 0.9, 0.1, 10)
 P_sec = data_phys["koi_period"] * 24 * 3600
 M_star = data_phys["koi_smass"] * M_sun
@@ -81,6 +83,7 @@ data_phys["teq_derived"] = data_phys["koi_steff"] * np.sqrt(data_phys["koi_srad"
 L_ratio = (data_phys["koi_srad"]**2) * ((data_phys["koi_steff"]/T_sun)**4)
 data_phys["insol"] = np.clip(L_ratio / (data_phys["a_AU"]**2), 0, 1e6)
 
+# Normalize features
 features = ['koi_period', 'koi_impact', 'koi_duration', 'koi_depth',
             'koi_model_snr', 'teq_derived', 'prad_srad_ratio',
             'koi_steff', 'koi_srad', 'insol']
@@ -89,19 +92,19 @@ data_phys = data_phys[features]
 scaler = MinMaxScaler()
 scaler.fit(data_phys.values)
 
-# завантаження CNN моделі
+# Load CNN model
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 cnn_model = CNN_M3().to(device)
 cnn_model.load_state_dict(torch.load("models/best_model.pth", map_location=device))
 cnn_model.eval()
 
-# === Завантаження нової двоступінчатої моделі (для науковців) ===
+# === Load Two-Stage Model (Scientist Mode) ===
 scientist_model = joblib.load("models/model.pkl")
 
-# Перевіряємо тип моделі
+# Check model type
 if isinstance(scientist_model, dict):
-    # Нова версія - словник з компонентами
-    print("[INFO] Завантажено модель у новому форматі (словник)")
+    # New version - dictionary with components
+    print("[INFO] Loaded model in new format (dictionary)")
     cb1 = scientist_model['stage1_model']
     iso1 = scientist_model['stage1_calibrator']
     ensembles = scientist_model['stage2_ensembles']
@@ -115,11 +118,11 @@ if isinstance(scientist_model, dict):
     print(f"[INFO] Top {len(top_features)} ознак для Stage-2: {top_features}")
     USE_TWO_STAGE = True
 else:
-    # Стара версія - один CatBoost класифікатор
-    print("[WARNING] Завантажено модель у старому форматі (один класифікатор)")
-    print("[WARNING] Використовується спрощений одноступінчатий прогноз")
+    # Old version - single CatBoost classifier
+    print("[WARNING] Loaded model in old format (dictionary)")
+    print("[WARNING] Uses simplified one-stage prediction")
     simple_model = scientist_model
-    # Ознаки для старої моделі
+    # Features for the old model
     stack_features = ["koi_period","koi_duration","koi_depth",
                       "koi_prad","koi_teq","koi_insol",
                       "koi_steff","koi_srad","koi_kepmag"]
@@ -134,6 +137,7 @@ def serve_index():
 
 @app.route("/presets", methods=["GET"])
 def get_presets():
+    # Return the first 10 rows as presets
     presets = data_phys.head(10).to_dict(orient="records")
     for i, preset in enumerate(presets):
         preset["kepler_name"] = (
@@ -143,11 +147,11 @@ def get_presets():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-    """Прогноз для новачків (CNN модель)"""
+    """Prediction for beginners (CNN model)"""
     data_in = request.json
     df_new = pd.DataFrame([data_in])
 
-    # обчислення похідних ознак
+    # Calculate derived features
     df_new["koi_smass"] = np.clip(df_new["koi_srad"] ** 0.9, 0.1, 10)
     P_sec = df_new["koi_period"] * 24 * 3600
     M_star = df_new["koi_smass"] * M_sun
@@ -173,34 +177,33 @@ def predict():
 @app.route("/predict_scientist", methods=["POST"])
 def predict_scientist():
     """
-    Прогноз для науковців (двоступінчата модель model.pkl)
-    Повертає 3 класи: FALSE POSITIVE, CANDIDATE, CONFIRMED
+    Prediction for scientists (two-stage model model.pkl)
+    Returns 3 classes: FALSE POSITIVE, CANDIDATE, CONFIRMED
     """
     data_in = request.json
     df_new = pd.DataFrame([data_in])
     
-    # Переконуємося що всі необхідні ознаки присутні
-    # Якщо stage1_required_features збережені, використовуємо їх
+    # Ensure all required features are present
     if stage1_required_features is not None:
-        # Додаємо відсутні колонки з NaN якщо потрібно
+        # Add missing columns with NaN if needed
         for col in stage1_required_features:
             if col not in df_new.columns:
                 df_new[col] = np.nan
         X_stage1 = df_new[stage1_required_features].copy()
     else:
-        # Інакше використовуємо всі числові колонки що є
+        # Use all numeric columns if stage1_required_features is not defined
         X_stage1 = df_new.select_dtypes(include=[np.number]).copy()
     
-    # Stage-1: прогноз P(планета)
+    # Stage-1: Predict P(planet)
     p1_raw = cb1.predict_proba(X_stage1)[:, 1]
-    P_planet = iso1.predict(p1_raw)[0]  # калібрований
+    P_planet = iso1.predict(p1_raw)[0]  # calibrated
     P_planet = np.clip(P_planet, 0.0, 1.0)
     
-    # Stage-2: прогноз P(confirmed | планета)
-    # Використовуємо тільки top_features
+    # Stage-2: Predict P(confirmed | planet)
+    # Use only top_features
     X_stage2 = df_new[top_features].copy()
     
-    # Якщо є scaler для Stage-2, застосовуємо його (не обов'язково)
+    # If there is a scaler for Stage-2, apply it (optional)
     if stage2_scaler is not None:
         X_stage2_scaled = pd.DataFrame(
             stage2_scaler.transform(X_stage2), 
@@ -210,7 +213,7 @@ def predict_scientist():
     else:
         X_stage2_scaled = X_stage2
     
-    # Ансамбль Stage-2 моделей
+    # Ensemble of Stage-2 models
     ensemble_preds = []
     for model in ensembles:
         prob = model.predict_proba(X_stage2_scaled)[:, 1]
@@ -218,22 +221,22 @@ def predict_scientist():
     
     p2_raw_ens = np.mean(ensemble_preds, axis=0)[0]
     
-    # Калібрація Platt scaling
+    # Platt scaling calibration
     p2_calib = calibrater.predict_proba(np.array([[p2_raw_ens]]))[:, 1][0]
     p2_calib = np.clip(p2_calib, 0.0, 1.0)
     
-    # Зона невизначеності (опціонально)
+    # Uncertainty zone (optional)
     if (0.5 - EPSILON) <= p2_calib <= (0.5 + EPSILON):
-        p2_adj = 0.0  # консервативно -> CANDIDATE
+        p2_adj = 0.0  # conservatively -> CANDIDATE
     else:
         p2_adj = p2_calib
     
-    # Комбінуємо обидва етапи
+    # Combine both stages
     P_conf = P_planet * p2_adj
     P_cand = P_planet * (1.0 - p2_adj)
     P_fp = 1.0 - P_planet
     
-    # Визначаємо фінальний клас
+    # Determine final class
     probs = [P_fp, P_cand, P_conf]
     pred_idx = np.argmax(probs)
     labels = ["FALSE POSITIVE", "CANDIDATE", "CONFIRMED"]
@@ -252,11 +255,11 @@ def predict_scientist():
 
 @app.route("/save_planet", methods=["POST"])
 def save_planet():
-    """Зберігає планету у CSV форматі для подальшого аналізу"""
+    """Save planet data in CSV format for further analysis"""
     data_in = request.json
-    planet_name = data_in.get("planet_name", "Невідома")
+    planet_name = data_in.get("planet_name", "Unknown")
     
-    # Створюємо рядок з необхідними колонками
+    # Create a row with required columns
     new_row = {
         "kepler_name": planet_name,
         "koi_period": data_in.get("koi_period"),
@@ -272,19 +275,19 @@ def save_planet():
         "koi_model_snr": data_in.get("koi_model_snr", 10.0)
     }
     
-    # Генеруємо CSV
+    # Generate CSV
     df_new = pd.DataFrame([new_row])
     csv_buffer = io.StringIO()
     df_new.to_csv(csv_buffer, index=False)
     csv_content = csv_buffer.getvalue()
     
-    # Безпечна назва файлу
+    # Safe filename
     safe_filename = "".join(c for c in planet_name if c.isalnum() or c in (' ', '-', '_')).strip()
     if not safe_filename:
-        safe_filename = "планета"
+        safe_filename = "planet"
     
     return jsonify({
-        "message": f"Планета '{planet_name}' готова до завантаження!",
+        "message": f"Planet '{planet_name}' is ready for download!",
         "status": "success",
         "csv_data": csv_content,
         "filename": f"{safe_filename}.csv"

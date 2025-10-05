@@ -1,11 +1,11 @@
-/* Визначення кастомного властивості для радіального градієнта */
+/* Define custom property for radial gradient */
 @property --r {
   syntax: '<length-percentage>';
   initial-value: 0px;
   inherits: false;
 }
 
-/* Загальні стилі для сторінки */
+/* General page styles */
 html {
   scroll-behavior: smooth;
 }
@@ -30,7 +30,7 @@ main {
   width: 100%;
 }
 
-/* Стилі для навігаційного меню */
+/* Navigation menu styles */
 .nav-section {
   width: 100%;
   background: rgb(15, 15, 30, 0.8);
@@ -78,7 +78,7 @@ main {
   background-position: 0% 100%;
 }
 
-/* Стилі для канвасу з космічним фоном */
+/* Canvas styles for cosmic background */
 canvas {
   position: fixed;
   inset: 0;
@@ -87,7 +87,7 @@ canvas {
   z-index: -1;
 }
 
-/* Стилі для центрального контенту */
+/* Central content styles */
 .content {
   position: relative;
   z-index: 1;
@@ -99,7 +99,7 @@ canvas {
   box-sizing: border-box;
 }
 
-/* Стилі для секцій */
+/* Section styles */
 .section {
   display: none;
   width: 100%;
@@ -113,7 +113,7 @@ canvas {
   opacity: 1;
 }
 
-/* Стилі для заголовків */
+/* Header styles */
 .header-container {
   display: flex;
   flex-direction: column;
@@ -296,7 +296,7 @@ ease-out 0.3s;
   margin-bottom: 0.5rem;
 }
 
-/* Стилі для списку ресурсів */
+/* Resource list styles */
 .resources-list {
   list-style-type: none;
   margin: 1rem 0;
@@ -332,7 +332,7 @@ ease-out 0.3s;
   color: #ffffff;
 }
 
-/* Стилі для кнопок */
+/* Button styles */
 .btn {
   display: inline-block;
   padding: 1rem 2rem;
@@ -360,7 +360,7 @@ ease-out 0.3s;
   transform: translateY(-2px);
 }
 
-/* Стилі для повідомлень */
+/* Message styles */
 .file-message, .level-message {
   font-size: 1.4rem;
   font-weight: 300;
@@ -377,7 +377,7 @@ ease-out 0.3s;
   margin-right: auto;
 }
 
-/* Стилі для контейнера кнопок вибору рівня */
+/* Level selection button container styles */
 .level-buttons {
   display: flex;
   gap: 1.5rem;
@@ -386,7 +386,7 @@ ease-out 0.3s;
   margin-bottom: 2rem;
 }
 
-/* Стилі для контейнера блоків інформації про рівні */
+/* Level information block container styles */
 .level-info-container {
   display: flex;
   justify-content: center;
@@ -438,7 +438,6 @@ ease-out 0.3s;
   font-weight: 400;
 }
 
-/* Стилі для секції для початківців */
 /* Beginner section positioning */
 .beginner-section {
   width: 90%;
@@ -879,7 +878,7 @@ ease-out 0.3s;
   font-size: 0.95rem;
 }
 
-/* Стилі для кнопки прогнозування */
+/* Prediction button styles */
 .predict-btn {
   display: inline-block;
   padding: 0.8rem 1.5rem;
@@ -905,7 +904,7 @@ ease-out 0.3s;
   transform: translateY(-2px);
 }
 
-/* Стилі для результату прогнозування */
+/* Prediction result styles */
 .prediction-result {
   margin-top: 2rem;
   padding: 1rem;
@@ -917,7 +916,7 @@ ease-out 0.3s;
   max-width: 700px;
 }
 
-/* Анімації */
+/* Animations */
 @keyframes floatInFromTop {
   from {
     opacity: 0;
