@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exoplanet Detection</title>
+  <link rel="stylesheet" href="static/css/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main>
+    <!-- Navigation Section -->
+    <nav class="nav-section">
+      <ul>
+        <li><a href="#getStarted" class="nav-link">About Project</a></li>
+        <li><a href="#levelSelection" class="nav-link">Choose Level</a></li>
+        <li><a href="#learnMore" class="nav-link">Learn More</a></li>
+        <li class="achievement-status" id="achievementStatus">
+          <span class="achievement-icon">🏆</span>
+          <span class="achievement-text"><span id="achievementCount">5</span> hidden achievements remaining</span>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Canvas for Background -->
+    <canvas id="c"></canvas>
+
+    <section id="get-started-section" class="section content">
+      <div class="header-container">
+        <h1>/DOE4230/</h1>
+        <h2>🚀 Project Overview: Exoplanet Hunter</h2>
+      </div>
+      <div class="section-block" id="mission-block">
+        <video autoplay loop muted class="section-video">
+          <source src="/static/media/exoplanet.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="section-text">
+          <h3>The Mission: Turning Curiosity into Discovery</h3>
+          <p>We believe science should be open to everyone. Our project transforms real NASA Kepler data into an interactive platform where anyone can try to detect exoplanets. With the help of machine learning, users can experience the thrill of discovery while contributing to real science.
+
+Every star hides a story. Some hide entire worlds. Our neural network helps reveal them — distinguishing true planetary signals from the background noise of the cosmos.</p>
+        </div>
+      </div>
+      <div class="section-block" id="transit-block">
+        <video autoplay loop muted class="section-video">
+          <source src="/static/media/transit2.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="section-text">
+          <h3>The Simple Idea: The Transit Method</h3>
+          <p>When a planet passes (or "transits") in front of its host star from our perspective, the star's brightness dips slightly. This is the transit method, the most effective way to find new planets. However, not every dip in brightness is a planet. Signals are often obscured by:</p>
+          <ul>
+            <li>False positives: Distant binary stars or eclipsing star systems.</li>
+            <li>Instrument errors: Noise from the telescope.</li>
+            <li>Statistical variation: Random fluctuations in light.</li>
+          </ul>
+          <p>Our model automates this process, sifting through millions of data points to find subtle patterns in numerical features that are nearly impossible for the human eye to spot.</p>
+        </div>
+      </div>
+      <div class="section-block centered" id="what-you-can-do-block">
+        <div class="section-text centered-text">
+          <h3>What You Can Do</h3>
+          <p><strong>🌱 For Beginners:</strong> Explore real NASA Kepler data without coding or advanced math. Learn how scientists detect exoplanets using the <em>transit method</em>, play with data, earn achievements, and see science unfold in real time.</p>
+          <p><strong>🔬 For Future Scientists:</strong> Use our models as a first filter to highlight the most promising exoplanet candidates. Save time, experiment with custom datasets, and test your own hypotheses with real telescope data.</p>
+          <p>🚀 Ready to begin your journey? Click the button below and start exploring the universe!</p>
+        </div>
+
+        <a href="#" class="btn">Get Started</a>
+      </div>
+    </section>
+
+    <section id="level-selection-section" class="section content">
+      <h1>New to space or a seasoned astronomer? Choose your level!</h1>
+      <p class="level-message">Pick your experience level to begin exploring!</p>
+      <div class="level-buttons">
+        <a href="#" class="btn">I'm a Beginner</a>
+        <a href="#" class="btn">I'm a Scientist</a>
+      </div>
+      <div class="level-info-container">
+        <div class="level-info">
+          <h3>👥 Beginner Mode: The Smart Eye </p>(🌱 Novice Level)</h3>
+          <p><strong>Model Type:</strong> Simple Convolutional Neural Network (CNN)</p>
+          <p>Imagine thousands of stars blinking faintly in the night sky. Most flickers are just noise — but sometimes a planet passes in front of its star, dimming the light ever so slightly.</p>
+          <p><strong>The Magic:</strong> Our basic CNN acts like a trained eye, spotting these subtle “winks” and turning them into a simple answer: <em>“Looks like a planet”</em> or <em>“Probably just noise.”</em></p>
+          <p><strong>Simply put:</strong> This is the <em>Easy & Quick Answer</em> button — load the data and get an instant verdict. 😺</p>
+        </div>
+
+        <div class="level-info">
+          <h3>🔬 Scientist Mode: The Research Ensemble (🔬 Advanced Level)</h3>
+          <p><strong>Model Type:</strong> Stacking Ensemble of ML Algorithms</p>
+          <p>This mode is designed for deeper exploration. Instead of one model, it uses an ensemble — a team of algorithms combining their strengths.</p>
+          <p><strong>The Deep Dive:</strong> It analyzes not only light curves, but also derived physical parameters such as:</p>
+          <ul>
+            <li>Planet-to-star radius ratios</li>
+            <li>Stellar flux, mass, and radius</li>
+            <li>Orbital dynamics and temperature estimates</li>
+          </ul>
+          <p>This makes the system a true research instrument — helping prioritize candidates, test advanced hypotheses, and refine detection with scientific rigor.</p>
+          <p><strong>Simply put:</strong> Your precision toolkit for serious exoplanet research and hypothesis testing.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="beginner-section" class="section beginner-section">
+      <!-- Achievement Status Bar -->
+      <!-- <div class="achievement-status" id="achievementStatus">
+        <span class="achievement-icon">🏆</span>
+        <span class="achievement-text"><span id="achievementCount">5</span> hidden achievements remaining</span>
+      </div> -->
+
+      <div class="beginner-container">
+        <div class="beginner-controls">
+          <h2>Create Your Exoplanet!</h2>
+          
+          <div class="preset-selector">
+            <label for="preset-select">Choose a preset:</label>
+            <select class="preset-select" id="preset-select">
+              <option value="">Manual Input</option>
+            </select>
+          </div>
+
+          <div class="parameter-group" id="orbital-sliders">
+            <h3>Orbital Characteristics</h3>
+          </div>
+          <div class="parameter-group" id="transit-sliders">
+            <h3>Transit Characteristics</h3>
+          </div>
+          <div class="parameter-group" id="planet-sliders">
+            <h3>Planet Environment</h3>
+          </div>
+          <div class="parameter-group" id="stellar-sliders">
+            <h3>Stellar Properties</h3>
+          </div>
+        </div>
+
+        <div class="planet-visualization">
+          <div class="planet-container">
+            <svg class="planet-svg" width="320" height="320" viewBox="0 0 320 320">
+              <defs>
+                <radialGradient id="planetGradient" cx="40%" cy="40%">
+                  <stop offset="0%" class="planet-gradient-light" />
+                  <stop offset="70%" class="planet-gradient-main" />
+                  <stop offset="100%" class="planet-gradient-dark" />
+                </radialGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              <circle cx="160" cy="160" r="140" fill="url(#planetGradient)" filter="url(#glow)" class="planet-core"/>
+              <circle cx="160" cy="160" r="140" stroke="#4b5563" stroke-width="6" fill="none" 
+                      stroke-dasharray="0 879.6" stroke-linecap="round" class="planet-ring"/>
+            </svg>
+            <div class="planet-percentage">
+              <span class="percentage-value">--</span>
+            </div>
+          </div>
+          
+          <div class="prediction-info">
+            <div class="prediction-label">Probability of being</div>
+            <div class="prediction-title">an Exoplanet Candidate</div>
+            <div class="prediction-status">Adjust parameters to predict</div>
+          </div>
+          
+          <div class="save-planet-section" id="savePlanetSection" style="display: none;">
+            <input type="text" id="planetName" class="planet-name-input" placeholder="Enter planet name (e.g., KOI-1234.01)" maxlength="50">
+            <button id="savePlanetBtn" class="save-planet-btn">💾 Save Planet</button>
+            <div id="saveMessage" class="save-message"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="model-info">
+        <h3>About This Model</h3>
+        <p>This calculator uses a Convolutional Neural Network (CNN) trained on NASA's Kepler Objects of Interest (KOI) dataset. The model analyzes 10 key parameters including orbital characteristics, transit properties, and stellar features to predict the probability that a celestial object is an exoplanet candidate. Predictions update in real-time as you adjust the parameters.</p>
+      </div>
+    </section>
+
+    <!-- Achievement Notification (Steam Style) -->
+    <div class="achievement-notification" id="achievementNotification">
+      <div class="achievement-content">
+        <img src="/static/media/achievement_icon.png" alt="Achievement" class="achievement-image">
+        <div class="achievement-details">
+          <div class="achievement-header">Achievement Unlocked</div>
+          <div class="achievement-name">The First Whisper</div>
+          <div class="achievement-description">Discover your first exoplanet candidate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievement Sound -->
+    <audio id="achievementSound" preload="auto">
+      <source src="/static/media/achievement_sound.mp3" type="audio/mpeg">
+      <source src="/static/media/achievement_sound.ogg" type="audio/ogg">
+    </audio>
+
+<section id="scientist-section" class="section scientist-section">
+      <div class="scientist-container">
+        <div class="scientist-controls">
+          <h2>Advanced Prediction</h2>
+          
+          <div class="parameter-group">
+            <h3>Orbital & Transit Parameters</h3>
+            <div class="input-field">
+              <label>Orbital Period (days):</label>
+              <input type="number" id="sci_koi_period" step="any" placeholder="e.g., 365.25">
+            </div>
+            <div class="input-field">
+              <label>Transit Duration (hours):</label>
+              <input type="number" id="sci_koi_duration" step="any" placeholder="e.g., 6.5">
+            </div>
+            <div class="input-field">
+              <label>Transit Depth (ppm):</label>
+              <input type="number" id="sci_koi_depth" step="any" placeholder="e.g., 84">
+            </div>
+          </div>
+
+          <div class="parameter-group">
+            <h3>Planet Properties</h3>
+            <div class="input-field">
+              <label>Planet Radius (Earth radii):</label>
+              <input type="number" id="sci_koi_prad" step="any" placeholder="e.g., 1.0">
+            </div>
+            <div class="input-field">
+              <label>Equilibrium Temperature (K):</label>
+              <input type="number" id="sci_koi_teq" step="any" placeholder="e.g., 288">
+            </div>
+            <div class="input-field">
+              <label>Insolation (Earth=1):</label>
+              <input type="number" id="sci_koi_insol" step="any" placeholder="e.g., 1.0">
+            </div>
+          </div>
+
+          <div class="parameter-group">
+            <h3>Stellar Properties</h3>
+            <div class="input-field">
+              <label>Stellar Temperature (K):</label>
+              <input type="number" id="sci_koi_steff" step="any" placeholder="e.g., 5778">
+            </div>
+            <div class="input-field">
+              <label>Stellar Radius (R☉):</label>
+              <input type="number" id="sci_koi_srad" step="any" placeholder="e.g., 1.0">
+            </div>
+            <div class="input-field">
+              <label>Kepler Magnitude:</label>
+              <input type="number" id="sci_koi_kepmag" step="any" placeholder="e.g., 15.5">
+            </div>
+          </div>
+        </div>
+
+        <div class="scientist-sidebar">
+          <div class="scientist-actions">
+            <h3>Actions</h3>
+            <input type="file" id="loadDataFile" accept=".csv" style="display: none;">
+            <button id="loadDataBtn" class="action-btn load-btn">📂 Load Data</button>
+            <button id="predictScientistBtn" class="action-btn predict-btn">🔬 Predict</button>
+          </div>
+
+          <div class="scientist-result-panel">
+            <h3>Prediction Result</h3>
+            <div id="scientistResult" class="result-display">
+              <div class="result-placeholder">Configure parameters and click Predict</div>
+            </div>
+          </div>
+
+          <div class="model-info">
+            <h3>About This Model</h3>
+            <p>Advanced stacking ensemble combining multiple algorithms for high-precision classification. Trained on extended feature set including derived astrophysical quantities.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="learnMore" class="section content">
+      <div class="header-container learn-more-header">
+        <h2>🔭 Learn More: The Science and the Solution</h2>
+      </div>
+
+      <div class="section-block" id="data-block">
+        <video autoplay loop muted class="section-video">
+          <source src="/static/media/nasa_confirms.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="section-text">
+          <h3>The Data: Kepler Objects of Interest (KOI)</h3>
+          <p>Our model is trained on the Kepler Objects of Interest (KOI) Catalog, an immense list of "suspicious" objects compiled by the Kepler Space Telescope. For years, Kepler continuously monitored thousands of stars, recording the slightest variations in their brightness. Each time the light dimmed, an entry was added to the database: a potential planet transit.</p>
+          <p>However, in this cosmic lottery, not every dimming event signifies an exoplanet. The data is categorized with labels essential for our training:</p>
+          <ul>
+            <li><strong>Confirmed Exoplanet:</strong> A verified world.</li>
+            <li><strong>Candidate:</strong> An object with transit-like features, requiring further study.</li>
+            <li><strong>False Positive:</strong> An event caused by something other than an exoplanet.</li>
+          </ul>
+          <p>We specifically focused on training our neural network to distinguish between Candidates and False Positives, learning where a planet is truly hiding versus where it's merely an optical illusion.</p>
+        </div>
+      </div>
+
+      <div class="section-block reverse" id="transit-method-block">
+        <video autoplay loop muted class="section-video">
+          <source src="/static/media/transit_method.mp4" type="video/mp4">
+          Your browserdoes not support the video tag.
+        </video>
+        <div class="section-text">
+          <h3>The Transit Method Explained</h3>
+          <p>The transit method is perhaps the most elegant way to find planets beyond our system. It's based on a remarkably simple principle: If a planet crosses directly in front of its star from an observer's perspective on Earth, the star's measured brightness drops slightly.</p>
+          <p>Imagine you're looking at a lightbulb, and a tiny speck of dust briefly passes in front of it. The light doesn't vanish, but it becomes marginally dimmer. Kepler did the same thing, but instead of dust specks, it was looking for Earth- or Jupiter-sized planets orbiting stars hundreds of light-years away.</p>
+          <p><strong>How It Works:</strong></p>
+          <ul>
+            <li><strong>Measurement:</strong> The telescope continuously measures the light intensity of thousands of stars.</li>
+            <li><strong>Detection:</strong> If brightness periodically drops for the same duration and depth, it indicates an orbiting planet.</li>
+            <li><strong>Analysis:</strong> The shape of the light "dip" reveals key properties: orbital period, size, distance, and temperature.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section-block centered" id="future-block">
+        <div class="section-text centered-text">
+            <h3>🧭 Future Development</h3>
+            <p><strong>Educational Enrichment & Progression:</strong></p>
+            <ul>
+                <li>**Enhanced Visualization:** Integrating more intuitive and interactive diagrams of the transit method, the light curve, and how the ML model interprets features.</li>
+                <li>**Guided Learning & Level Refinement:** Creating a step-by-step tutorial section and developing the **Scientist Level** to ensure a clear and smooth transition from beginner to advanced data analysis.</li>
+            </ul>
+            <p><strong>Gamification & Community Engagement:</strong></p>
+            <ul>
+                <li>**Expanded Achievements:** Adding more milestones and challenges to the platform to reward continuous learning.</li>
+                <li>**Exclusive Rewards:** Providing unique rewards for achievements, such as access to exclusive **scientific articles, interactives, and color themes**, to foster deep engagement.</li>
+            </ul>
+            <p><strong>Research Utility & Precision:</strong></p>
+            <ul>
+                <li>**New Data Integration:** Expanding the model to ingest data from newer missions, such as **TESS (Transiting Exoplanet Survey Satellite)**, to broaden its predictive scope.</li>
+                <li>**Confidence Scoring:** Developing a more nuanced output that provides a **confidence score** for candidates, rather than just a binary classification.</li>
+            </ul>
+            <p>Our tool is designed to be an assistive technology, not a replacement for human astronomers. It helps them filter the immense haystack of data to rapidly pinpoint the few "pearls"—objects that truly merit closer inspection.</p>
+        </div>
+      </div>
+      <div class="section-block centered resources-block">
+        <div class="section-text centered-text">
+          <h3>Additional Resources</h3>
+          <ul class="resources-list">
+            <li><a href="https://science.nasa.gov/exoplanets/" target="_blank">NASA Exoplanets Overview</a>: Comprehensive resource covering exoplanet discovery methods, recent findings, and mission details from NASA's exoplanet exploration program.</li>
+            
+            <li><a href="https://eyes.nasa.gov/apps/exo/#/" target="_blank">NASA Eyes on Exoplanets</a>: Interactive 3D visualization tool to explore confirmed exoplanets in real-time, view their orbital mechanics, and travel through space to visit distant worlds.</li>
+            
+            <li><a href="https://science.nasa.gov/exoplanets/whats-a-transit/" target="_blank">What's a Transit?</a>: Detailed explanation of the transit method used by telescopes like Kepler to detect exoplanets by measuring the dimming of starlight.</li>
+            
+            <li><a href="https://science.nasa.gov/exoplanets/immersive/strange-new-worlds/" target="_blank">Strange New Worlds</a>: Immersive multimedia experience showcasing the diversity of discovered exoplanets, from hot Jupiters to potentially habitable rocky worlds.</li>
+            
+            <li><a href="https://science.nasa.gov/exoplanets/citizen-science/" target="_blank">Exoplanet Citizen Science</a>: Contribute to real exoplanet research through citizen science projects where you can help analyze data and discover new planets alongside professional astronomers.</li>
+            
+            <li><a href="https://science.nasa.gov/mission/roman-space-telescope/transit-method/" target="_blank">Roman Space Telescope: Transit Method</a>: Learn how NASA's upcoming Nancy Grace Roman Space Telescope will use advanced transit detection to discover thousands of new exoplanets.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="static/js/script.js"></script>
+</body>
+</html>
